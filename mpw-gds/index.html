@@ -7,6 +7,28 @@
 <meta name="description" content="Free, open-source GDSII (.gds) inspector that runs entirely in your browser — nothing is uploaded. Reads top cell, die size, layer list, cell hierarchy and element counts, then builds a non-confidential RFQ summary. No server, no GDS leaves your machine.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://mst-sg.com/tools/mpw-gds/">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N701965W1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1N701965W1');
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('a,button');
+  if (!el || typeof gtag !== 'function') return;
+  var href = el.getAttribute('href') || '';
+  var id = el.getAttribute('id') || '';
+  if (href.indexOf('https://store.mst-sg.com/services/mpw-tapeout-rfq') === 0) {
+    gtag('event', 'mpw_tool_rfq_click', { event_category: 'conversion', event_label: 'gds', page_path: window.location.pathname });
+  } else if (href.indexOf('https://store.mst-sg.com') === 0) {
+    gtag('event', 'store_click', { event_category: 'conversion', event_label: href, page_path: window.location.pathname });
+  } else if (href.indexOf('https://github.com/shensi8312/mpw-tools') === 0) {
+    gtag('event', 'github_click', { event_category: 'engagement', event_label: 'mpw-tools', page_path: window.location.pathname });
+  } else if (id === 'copyRfq' || id === 'dlRfq') {
+    gtag('event', 'mpw_gds_summary_action', { event_category: 'engagement', event_label: id, page_path: window.location.pathname });
+  }
+});
+</script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Local GDSII Inspector — die size, layers &amp; cell tree, 100% in your browser">
 <meta property="og:description" content="Inspect a .gds file fully client-side — top cell, die size, layers, cell tree — nothing uploaded. Builds a non-confidential RFQ summary. Open-source.">
