@@ -1,6 +1,6 @@
 # MPW Tools — free, open-source planning tools for mature-node multi-project wafers
 
-Two browser-based tools for anyone planning a **mature-node MPW (multi-project wafer) tapeout**. No signup, no upload, **nothing leaves your browser**. Built and maintained by [**MST**](https://mst-sg.com) — we coordinate mature-node & specialty-process MPW/tapeout RFQs for overseas fabless teams, universities and industrial chip groups.
+Three browser-based tools for anyone planning a **mature-node MPW (multi-project wafer) tapeout**. No signup, no upload, **nothing leaves your browser**. Built and maintained by [**MST**](https://mst-sg.com) — we coordinate mature-node & specialty-process MPW/tapeout RFQs for overseas fabless teams, universities and industrial chip groups.
 
 > **We are not a foundry, and we don't take your GDS at intake.** These tools are deliberately built to run 100% client-side — your numbers and (in the planner) your floorplan never touch a server.
 
@@ -10,6 +10,7 @@ Two browser-based tools for anyone planning a **mature-node MPW (multi-project w
 |------|--------------|------|
 | **Reticle & Wafer Planner** | Pack several projects into a shared reticle, step it across the wafer, estimate gross/good dies (defect-density yield) and each project's area-based cost share. | **https://mst-sg.com/tools/mpw-planner/** |
 | **Cost & Dies Estimator** | Quick single-die read: gross dies/wafer, shared-reticle utilisation, indicative cost band, tape-out readiness checklist. | **https://mst-sg.com/tools/mpw-estimator/** |
+| **Local GDSII Inspector** | Drop a `.gds` file — read top cell, die size, layer list and cell hierarchy **100% in your browser (nothing uploaded)**, then build a non-confidential RFQ summary. | **https://mst-sg.com/tools/mpw-gds/** |
 
 **Need a real number?** The indicative output is a planning figure — send a high-level brief and we'll route it to a partner-confirmed price & schedule:
 **→ [Start an MPW RFQ](https://store.mst-sg.com/services/mpw-tapeout-rfq)** *(no GDS, no netlist needed at this stage)*
@@ -41,6 +42,19 @@ Cost (indicative)  $/mm² × node-factor × process-factor × (die area × copie
 The yield model captures **random-defect loss only**, times a flat systematic factor — it excludes parametric yield, edge effects beyond the corner test, and test/assembly loss. The cost band is calibrated to **public** university-shuttle reference pricing (≈180 nm $1.0–1.5k/mm² · 65 nm ≈ $5.8k · 28 nm ≈ $13.8k) and is a coarse planning figure only. A real MPW quote depends on the foundry, shuttle calendar, mask grade, wafer count and packaging.
 
 ---
+
+## Local GDSII Inspector — what's inside
+
+A correct, robust, **fully client-side** GDSII (`.gds`) reader — built to prove our "no IP at intake" promise: your layout never leaves your machine.
+
+- **Parsed in a Web Worker** (inline Blob) so even hundreds-of-MB files don't freeze the tab; the file is read with `FileReader` and never sent anywhere.
+- **Correct GDSII decoding** — big-endian record stream, the Calma 8-byte REAL (`UNITS`/`MAG`/`ANGLE`, *not* IEEE-754) decoded exactly, `metres-per-db-unit` used for true micrometres.
+- **True die size** = the top cell's bounding box, computed recursively through every `SREF`/`AREF` instance, each transformed by reflect → magnify → rotate → translate; arrays handled in closed form (O(1) regardless of array size). Reference cycles and missing cells are detected and skipped — never hangs.
+- **Top-cell detection** (defined − referenced), distinct `(layer, datatype)` list with counts, element-type totals, and a collapsed cell-hierarchy tree with instance counts.
+- **Non-confidential RFQ summary** — die size, area, counts and units only (no geometry/IP), with a deep-link that pre-fills an MPW RFQ.
+- **Hardened against untrusted binary** — bounds-checked reads, forward-progress/record/time guards, OASIS detection, graceful partial parse on truncation, and every file-derived string escaped (no XSS).
+
+> OASIS (`.oas`) is detected and reported as not-yet-supported. Die box is axis-aligned (slightly conservative for rotated layouts); `PATH` end-caps are approximated to ±½ width; `TEXT` is excluded from die size.
 
 ## Why client-side?
 
