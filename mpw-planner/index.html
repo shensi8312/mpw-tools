@@ -7,6 +7,25 @@
 <meta name="description" content="Free, open-source MPW planner: pack multiple projects into a shared reticle, step it across the wafer, estimate gross/good dies with a defect-density yield model, and split the cost by area share. Runs 100% in your browser — no signup, no GDS.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://mst-sg.com/tools/mpw-planner/">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N701965W1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1N701965W1');
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('a');
+  if (!el || typeof gtag !== 'function') return;
+  var href = el.getAttribute('href') || '';
+  if (href.indexOf('https://store.mst-sg.com/services/mpw-tapeout-rfq') === 0) {
+    gtag('event', 'mpw_tool_rfq_click', { event_category: 'conversion', event_label: 'planner', page_path: window.location.pathname });
+  } else if (href.indexOf('https://store.mst-sg.com') === 0) {
+    gtag('event', 'store_click', { event_category: 'conversion', event_label: href, page_path: window.location.pathname });
+  } else if (href.indexOf('https://github.com/shensi8312/mpw-tools') === 0) {
+    gtag('event', 'github_click', { event_category: 'engagement', event_label: 'mpw-tools', page_path: window.location.pathname });
+  }
+});
+</script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="MPW Reticle &amp; Wafer Planner — free shared-reticle floorplan, yield &amp; cost-share tool">
 <meta property="og:description" content="Pack multiple projects into a shared reticle, step across the wafer, estimate good dies and split cost by area share. 100% in-browser, open-source.">

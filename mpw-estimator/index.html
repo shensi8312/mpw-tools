@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MPW Prototype Estimator — dies per wafer, reticle utilization, indicative cost | MST</title>
 <meta name="description" content="Free open-source MPW prototype estimator: gross dies per wafer, shared-reticle utilization, indicative mature-node cost range, shuttle timing and a tapeout-readiness checklist. By MST Singapore — mature-node MPW & RFQ coordination." />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N701965W1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1N701965W1');
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('a');
+  if (!el || typeof gtag !== 'function') return;
+  var href = el.getAttribute('href') || '';
+  if (href.indexOf('https://store.mst-sg.com/services/mpw-tapeout-rfq') === 0) {
+    gtag('event', 'mpw_tool_rfq_click', { event_category: 'conversion', event_label: 'estimator', page_path: window.location.pathname });
+  } else if (href.indexOf('https://store.mst-sg.com') === 0) {
+    gtag('event', 'store_click', { event_category: 'conversion', event_label: href, page_path: window.location.pathname });
+  } else if (href.indexOf('https://github.com/shensi8312/mpw-tools') === 0) {
+    gtag('event', 'github_click', { event_category: 'engagement', event_label: 'mpw-tools', page_path: window.location.pathname });
+  }
+});
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script>document.documentElement.className='js';</script>
