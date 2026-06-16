@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MST Open Tools - free MPW, P&amp;ID and engineering RFQ utilities</title>
+<meta name="description" content="Free browser tools from MST for MPW planning, non-confidential RFQ preparation, local-only GDSII inspection, P&ID-to-SOLIDWORKS intake and engineering sourcing workflows.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://mst-sg.com/tools/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MST Open Tools - free MPW, P&amp;ID and engineering RFQ utilities">
+<meta property="og:description" content="A dedicated directory for real browser tools: MPW planning, local GDSII inspection, non-confidential RFQ packs, P&ID-to-SOLIDWORKS intake and engineering sourcing utilities.">
+<meta property="og:url" content="https://mst-sg.com/tools/">
+<meta property="og:image" content="https://mst-sg.com/wp-content/themes/mst-sg-theme-v2/assets/images/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "MST Open Tools",
+  "url": "https://mst-sg.com/tools/",
+  "description": "A directory of MST engineering and RFQ tools for MPW planning, local GDSII inspection, P&ID-to-SOLIDWORKS engineering intake and sourcing preparation.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Moore Solution Technology Pte. Ltd.",
+    "url": "https://mst-sg.com",
+    "sameAs": [
+      "https://www.linkedin.com/company/moore-solution",
+      "https://github.com/shensi8312/mpw-tools"
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "MPW RFQ Pack Builder", "url": "https://mst-sg.com/tools/mpw-rfq-pack/"},
+      {"@type": "ListItem", "position": 2, "name": "Local GDSII Inspector", "url": "https://mst-sg.com/tools/mpw-gds/"},
+      {"@type": "ListItem", "position": 3, "name": "MPW Reticle and Wafer Planner", "url": "https://mst-sg.com/tools/mpw-planner/"},
+      {"@type": "ListItem", "position": 4, "name": "MPW Cost and Dies Estimator", "url": "https://mst-sg.com/tools/mpw-estimator/"},
+      {"@type": "ListItem", "position": 5, "name": "P&ID Assembly Intake Checklist", "url": "https://mst-sg.com/tools/pid-assembly-intake/"}
+    ]
+  }
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1N701965W1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-1N701965W1');
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('a');
+  if (!el || typeof gtag !== 'function') return;
+  var href = el.getAttribute('href') || '';
+  if (href.indexOf('https://store.mst-sg.com') === 0) {
+    gtag('event', 'tools_store_click', {event_category:'conversion', event_label:href, page_path:window.location.pathname});
+  } else if (href.indexOf('https://github.com') === 0) {
+    gtag('event', 'tools_github_click', {event_category:'engagement', event_label:href, page_path:window.location.pathname});
+  } else if (href.indexOf('/tools/') === 0 || href.indexOf('https://mst-sg.com/tools/') === 0) {
+    gtag('event', 'tools_directory_click', {event_category:'engagement', event_label:href, page_path:window.location.pathname});
+  }
+});
+</script>
+<style>
+:root{
+  --ink:#0a0d12;--ink2:#0f141c;--panel:#121922;--panel2:#161e29;
+  --line:rgba(236,231,221,.12);--line2:rgba(236,231,221,.2);
+  --bone:#ece7dd;--muted:#9aa6b6;--faint:#5f6b7a;--signal:#ff6a1f;--cool:#7fb7d6;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--body:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--body);background:var(--ink);color:var(--bone);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.28}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase}
+.eyebrow{color:var(--signal)}
+.site-head{position:sticky;top:0;z-index:20;background:rgba(10,13,18,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:66px}
+.brand{font-weight:800;letter-spacing:.02em}.brand b{color:var(--signal)}
+.nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end;font-size:.84rem;color:var(--muted)}
+.nav a:hover{color:var(--signal)}
+.hero{padding:72px 0 46px;border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:46px;align-items:center}
+h1{font-size:clamp(2.1rem,5vw,4.2rem);line-height:1.02;margin:18px 0 18px;letter-spacing:-.035em;max-width:13ch}
+h1 span{color:var(--signal)}
+.lede{font-size:1.08rem;color:var(--muted);max-width:62ch;margin:0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--signal);background:var(--signal);color:#160a03;padding:12px 16px;display:inline-flex;align-items:center;gap:.5em}
+.btn:hover{background:transparent;color:var(--signal)}
+.btn.ghost{background:transparent;color:var(--bone);border-color:var(--line2)}
+.btn.ghost:hover{border-color:var(--signal);color:var(--signal)}
+.visual{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),var(--ink2));padding:14px}
+.visual img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;background:var(--ink)}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-top:0}
+.trust div{padding:18px;border-right:1px solid var(--line)}.trust div:last-child{border-right:0}
+.trust b{display:block;color:var(--bone);margin-bottom:4px}.trust span{color:var(--muted);font-size:.9rem}
+section{padding:62px 0;border-bottom:1px solid var(--line)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:26px}
+h2{font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.08;margin:0;letter-spacing:-.025em;max-width:18ch}
+.section-head p{color:var(--muted);max-width:45ch;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{border:1px solid var(--line);background:var(--ink2);display:flex;flex-direction:column;min-height:300px;transition:.2s;overflow:hidden}
+.card:hover{border-color:var(--line2);transform:translateY(-2px)}
+.card .pic{display:block;width:100%;aspect-ratio:16/9;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden}
+.card .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.card .body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cool)}
+.card h3{font-size:1.22rem;line-height:1.16;margin:0;letter-spacing:-.01em}
+.card p{color:var(--muted);font-size:.94rem;margin:0}
+.meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.pill{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);color:var(--muted);padding:4px 7px}
+.link{margin-top:auto;color:var(--signal);font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding-top:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{border:1px solid var(--line);background:var(--panel);padding:24px}
+.panel h3{margin:0 0 12px;font-size:1.2rem}
+.panel ul{margin:0;padding:0;list-style:none;color:var(--muted)}
+.panel li{padding:10px 0;border-top:1px solid var(--line)}
+.panel li:first-child{border-top:0}.panel b{color:var(--bone)}
+.roadmap{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.road{border:1px solid var(--line);padding:18px;background:var(--ink2)}
+.road h3{margin:6px 0 8px;font-size:1rem}.road p{margin:0;color:var(--muted);font-size:.9rem}
+.notice{border:1px solid rgba(255,106,31,.4);background:rgba(255,106,31,.08);padding:18px;color:var(--bone);margin-top:18px}
+footer{padding:34px 0;color:var(--faint);font-family:var(--mono);font-size:.7rem;letter-spacing:.08em}
+footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media(max-width:900px){.hero-grid,.split{grid-template-columns:1fr}.grid,.roadmap{grid-template-columns:1fr}.trust{grid-template-columns:1fr}.trust div{border-right:0;border-top:1px solid var(--line)}.section-head{display:block}.section-head p{margin-top:10px}.nav{gap:12px}.hero{padding-top:46px}}
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/">MST <b>Open Tools</b></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/mpw/">MPW</a>
+      <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a>
+      <a href="/tools/">Tools</a>
+      <a href="/news/">News</a>
+      <a href="https://store.mst-sg.com/?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=tools_directory&amp;utm_content=top_nav" target="_blank" rel="noopener">Store / RFQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="mono eyebrow">Engineering and RFQ tools</div>
+        <h1>Free tools for <span>MPW, P&amp;ID and sourcing</span> work.</h1>
+        <p class="lede">MST publishes practical browser tools for engineers, founders and procurement teams: MPW planning, local-only GDSII inspection, non-confidential RFQ packs, and P&amp;ID-to-SOLIDWORKS intake. The goal is simple: help users do useful work before they contact us.</p>
+        <div class="actions">
+          <a class="btn" href="/tools/mpw-rfq-pack/">Build MPW RFQ Pack</a>
+          <a class="btn ghost" href="/tools/pid-assembly-intake/">P&amp;ID Intake Tool</a>
+          <a class="btn" href="/mpw/">Explore MPW</a>
+        </div>
+      </div>
+      <div>
+        <div class="visual">
+          <img src="/wp-content/themes/mst-sg-theme-v2/assets/images/mpw-rfq-coordination-flow.svg" alt="MST MPW RFQ coordination flow">
+        </div>
+        <div class="trust">
+          <div><b>Five live tools</b><span>MPW, GDSII and P&amp;ID intake utilities.</span></div>
+          <div><b>Browser-first</b><span>Tools run locally and avoid confidential uploads.</span></div>
+          <div><b>Open-source path</b><span>MPW utilities are mirrored to GitHub.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mpw">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Live MPW tools</h2>
+        <p>For fabless teams, universities, researchers and procurement managers who need a practical read before a partner-confirmed MPW RFQ.</p>
+      </div>
+      <div class="grid">
+        <a class="card" href="/tools/mpw-rfq-pack/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/mpw-rfq-coordination-flow.svg" alt="MPW RFQ pack builder visual"></span>
+          <span class="body">
+            <span class="tag">Live tool · RFQ preparation</span>
+            <h3>MPW RFQ Pack Builder</h3>
+            <p>Build a non-confidential first-screening brief with node, process family, die area, samples, package/test assumptions, timeline and missing items.</p>
+            <span class="meta"><span class="pill">No GDS</span><span class="pill">Markdown</span><span class="pill">JSON</span></span>
+            <span class="link">Build RFQ pack &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/tools/mpw-gds/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/mpw-node-process-coverage.svg" alt="MPW node coverage visual"></span>
+          <span class="body">
+            <span class="tag">Live tool · privacy</span>
+            <h3>Local GDSII Inspector</h3>
+            <p>Drop a .gds file and inspect top cell, die size, layer list and cell hierarchy fully in the browser. No upload, no server, no design IP at intake.</p>
+            <span class="meta"><span class="pill">No upload</span><span class="pill">GDS metadata</span><span class="pill">RFQ summary</span></span>
+            <span class="link">Open tool &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/tools/mpw-planner/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/mpw-rfq-coordination-flow.svg" alt="MPW reticle and wafer planning visual"></span>
+          <span class="body">
+            <span class="tag">Live tool · MPW planning</span>
+            <h3>Reticle &amp; Wafer Planner</h3>
+            <p>Pack projects into a shared reticle, step fields across the wafer, estimate gross/good dies and compare area-based cost share.</p>
+            <span class="meta"><span class="pill">Reticle</span><span class="pill">Wafer map</span><span class="pill">Cost share</span></span>
+            <span class="link">Open planner &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/tools/mpw-estimator/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/mpw-node-process-coverage.svg" alt="MPW cost and dies estimator visual"></span>
+          <span class="body">
+            <span class="tag">Live tool · cost intuition</span>
+            <h3>Cost &amp; Dies Estimator</h3>
+            <p>Estimate die area, gross dies per wafer, indicative mature-node cost range and readiness factors before requesting a partner-confirmed quote.</p>
+            <span class="meta"><span class="pill">Dies/wafer</span><span class="pill">Cost band</span><span class="pill">Readiness</span></span>
+            <span class="link">Open estimator &rarr;</span>
+          </span>
+        </a>
+      </div>
+      <div class="actions">
+        <a class="btn ghost" href="https://github.com/shensi8312/mpw-tools" target="_blank" rel="noopener">Source on GitHub</a>
+        <a class="btn" href="https://store.mst-sg.com/services/mpw-tapeout-rfq?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=tools_directory&amp;utm_content=mpw_rfq" target="_blank" rel="noopener">Submit MPW RFQ</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="engineering">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>P&amp;ID and SOLIDWORKS tools</h2>
+        <p>For mechanical design engineers and semiconductor equipment teams scoping diagram-to-native-assembly automation with customer part-library reuse.</p>
+      </div>
+      <div class="grid">
+        <a class="card" href="/tools/pid-assembly-intake/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/platform-drawingdiff.png" alt="P&ID assembly intake checklist visual"></span>
+          <span class="body">
+            <span class="tag">Live tool · intake checklist</span>
+            <h3>P&amp;ID Assembly Intake Checklist</h3>
+            <p>Generate a pilot brief covering P&amp;ID quality, SOLIDWORKS version, customer part library, BOM/tag data, spatial envelope and UHP gas rules.</p>
+            <span class="meta"><span class="pill">Part library</span><span class="pill">Rule context</span><span class="pill">Pilot brief</span></span>
+            <span class="link">Open checklist &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/pid-to-native-solidworks-assembly/">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/platform-drawingdiff.png" alt="DrawingDiff engineering platform screen"></span>
+          <span class="body">
+            <span class="tag">Capability hub</span>
+            <h3>P&amp;ID to Native SOLIDWORKS Assembly</h3>
+            <p>Reviewable native SOLIDWORKS assembly proposals with feature tree, mates, customer part-library reuse, BOM context and rulepack validation.</p>
+            <span class="meta"><span class="pill">Native assembly</span><span class="pill">Feature tree</span><span class="pill">Rulepack</span></span>
+            <span class="link">Open capability hub &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/solutions/#drawingdiff">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/platform-drawingdiff.png" alt="DrawingDiff screenshot"></span>
+          <span class="body">
+            <span class="tag">Related platform</span>
+            <h3>DrawingDiff</h3>
+            <p>Engineering drawing comparison and P&amp;ID workflow support for review, change detection and customer-specific standards.</p>
+            <span class="meta"><span class="pill">Drawings</span><span class="pill">Review</span><span class="pill">Engineering AI</span></span>
+            <span class="link">Explore platform &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="https://github.com/shensi8312/semi-ai-toolkit" target="_blank" rel="noopener">
+          <span class="pic"><img src="/wp-content/themes/mst-sg-theme-v2/assets/images/news-ai-platforms.svg" alt="Semiconductor AI tools visual"></span>
+          <span class="body">
+            <span class="tag">Related open-source repo</span>
+            <h3>semi-ai-toolkit</h3>
+            <p>Local semiconductor AI toolkit codebase for DOE, process preprocessing, virtual metrology and related engineering workflows.</p>
+            <span class="meta"><span class="pill">Python</span><span class="pill">DOE</span><span class="pill">VM</span></span>
+            <span class="link">View GitHub &rarr;</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="sourcing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Sourcing and operations utilities</h2>
+        <p>These tools help procurement and operations teams turn incomplete requirements into structured RFQ conversations.</p>
+      </div>
+      <div class="grid">
+        <a class="card" href="/mpw/access-map/">
+          <span class="body">
+            <span class="tag">MPW reference</span>
+            <h3>Non-Western MPW Access Map</h3>
+            <p>A sourced comparison of MPW routes, eligibility gates and public pricing references. Useful before a non-US or non-EU team starts outreach.</p>
+            <span class="link">Open access map &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/cpk-calculator/">
+          <span class="body">
+            <span class="tag">Operations</span>
+            <h3>CPK Calculator</h3>
+            <p>Process capability analysis for manufacturing teams that need quick Cpk/Ppk, yield and sigma-level estimates.</p>
+            <span class="link">Open calculator &rarr;</span>
+          </span>
+        </a>
+        <a class="card" href="/oee-calculator/">
+          <span class="body">
+            <span class="tag">Operations</span>
+            <h3>OEE Calculator</h3>
+            <p>Availability, performance and quality calculation for manufacturing line diagnostics and quick improvement discussions.</p>
+            <span class="link">Open calculator &rarr;</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Tool roadmap for traffic growth</h2>
+        <p>These are the next free tools to build for engineers, procurement teams, universities and founders before they are ready to submit a formal RFQ.</p>
+      </div>
+      <div class="roadmap">
+        <div class="road"><span class="tag">P0</span><h3>MPW Tapeout Readiness Checker</h3><p>Score node, process, PDK/NDA path, DRC/LVS status, package/test assumptions and missing handoff items.</p></div>
+        <div class="road"><span class="tag">P0</span><h3>GDS/OASIS Handoff Manifest Generator</h3><p>Create checksums, top-cell notes, layer-map references and delivery manifest without exposing confidential layout geometry.</p></div>
+        <div class="road"><span class="tag">P0</span><h3>PDK / Foundry Requirement Checklist</h3><p>List required PDK files, rule decks, models, corners and signoff artifacts before NDA and partner-confirmed review.</p></div>
+        <div class="road"><span class="tag">P1</span><h3>Package &amp; Assembly Selector</h3><p>Map die size, IO count, power, frequency and sample quantity to likely QFN, BGA, WLCSP or COB options.</p></div>
+        <div class="road"><span class="tag">P1</span><h3>MPW Procurement Timeline Planner</h3><p>Build a reverse schedule from tapeout target, purchasing approval, payment, shipment and sample needs.</p></div>
+        <div class="road"><span class="tag">P1</span><h3>P&amp;ID BOM Completeness Checker</h3><p>Check tags, MPN, size, material, connection type, line class and missing vendor data before assembly generation.</p></div>
+        <div class="road"><span class="tag">P1</span><h3>UHP Gas Stick Rule Checklist</h3><p>Organize SEMI F82, UHP gas, VCR, C-seal/W-seal, orbital welding and service-clearance assumptions for pilot review.</p></div>
+        <div class="road"><span class="tag">P2</span><h3>BOM RFQ Normalizer</h3><p>Clean buyer BOM columns into a sourcing-ready RFQ table with alternates, quantity breaks, lifecycle notes and missing fields.</p></div>
+      </div>
+      <div class="notice">
+        MST is not a wafer foundry and does not sell or guarantee wafer capacity. MPW tools are for planning and RFQ preparation only. Price, schedule, process availability, PDK access and compliance status are confirmed case by case with qualified partners.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2023-2026 Moore Solution Technology Pte. Ltd. Singapore</span>
+    <span><a href="/mpw/">MPW</a> · <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a> · <a href="mailto:sales@mst-sg.com">sales@mst-sg.com</a></span>
+  </div>
+</footer>
+</body>
+</html>

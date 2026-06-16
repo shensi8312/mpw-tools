@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P&amp;ID Assembly Intake Checklist - native SOLIDWORKS pilot brief | MST</title>
+<meta name="description" content="Free browser checklist for P&ID-to-native-SOLIDWORKS assembly pilots: P&ID quality, BOM fields, customer part library, spatial envelope, UHP gas rules and output expectations.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://mst-sg.com/tools/pid-assembly-intake/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="P&amp;ID Assembly Intake Checklist - native SOLIDWORKS pilot brief">
+<meta property="og:description" content="Build a reviewable intake brief for P&ID-to-native-SOLIDWORKS assembly automation. Client-side, no upload.">
+<meta property="og:url" content="https://mst-sg.com/tools/pid-assembly-intake/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "P&ID Assembly Intake Checklist",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web browser",
+  "url": "https://mst-sg.com/tools/pid-assembly-intake/",
+  "description": "A free browser checklist that helps engineering teams scope a P&ID-to-native-SOLIDWORKS assembly pilot without uploading proprietary diagrams.",
+  "publisher": {"@type":"Organization","name":"Moore Solution Technology Pte. Ltd.","url":"https://mst-sg.com"},
+  "offers": {"@type":"Offer","price":"0","priceCurrency":"USD"}
+}
+</script>
+<style>
+:root{--ink:#0a0d12;--ink2:#0f141c;--panel:#121922;--panel2:#161e29;--line:rgba(236,231,221,.12);--line2:rgba(236,231,221,.22);--bone:#ece7dd;--dim:#9aa6b6;--faint:#5f6b7a;--signal:#ff6a1f;--soft:rgba(255,106,31,.13);--cool:#7fb7d6;--ok:#6fcf97;--warn:#f2c14e;--bad:#e06b6b;--mono:"IBM Plex Mono",monospace;--disp:"Bricolage Grotesque",sans-serif;--body:"Hanken Grotesk",sans-serif}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.26;-webkit-mask-image:radial-gradient(circle at 52% 0,#000,transparent 75%);mask-image:radial-gradient(circle at 52% 0,#000,transparent 75%)}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.mono{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}.eyebrow{color:var(--signal);display:inline-flex;gap:.7em;align-items:center}.eyebrow:before{content:"";width:24px;height:1px;background:var(--signal)}
+header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:rgba(10,13,18,.76);backdrop-filter:blur(12px)}header .wrap{height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:800;letter-spacing:-.01em}.mark{width:30px;height:30px;border:1.5px solid var(--signal);display:grid;place-items:center;font-family:var(--mono);font-size:.72rem;color:var(--signal)}.nav{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.nav a{color:var(--dim)}.nav a:hover{color:var(--signal)}
+.hero{padding:58px 0 28px}.hero-grid{display:grid;grid-template-columns:1fr .85fr;gap:34px;align-items:end}h1{font-family:var(--disp);font-size:clamp(2rem,5vw,3.35rem);line-height:1.04;letter-spacing:-.025em;margin:16px 0 0;max-width:16ch}h1 span{color:var(--signal)}.lede{color:var(--dim);font-size:1.05rem;max-width:63ch;margin:18px 0 0}.privacy{border:1px solid rgba(127,183,214,.35);background:rgba(127,183,214,.09);color:var(--cool);padding:13px 16px;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em}.privacy b{color:var(--bone)}
+.app{display:grid;grid-template-columns:430px minmax(0,1fr);gap:22px;padding:18px 0 68px;align-items:start}.panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--ink2));padding:20px}.panel.sticky{position:sticky;top:84px}.panel h2{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--signal);margin:0 0 14px}.panel h3{font-family:var(--disp);font-size:1.05rem;margin:0 0 10px}.section-note{color:var(--dim);font-size:.92rem;margin:-4px 0 16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{margin-bottom:13px}label{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}input,select,textarea{width:100%;background:var(--ink);color:var(--bone);border:1px solid var(--line2);padding:10px 12px;font-family:var(--body);font-size:.96rem;border-radius:0}textarea{min-height:90px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--signal);box-shadow:0 0 0 3px var(--soft)}.hint{font-family:var(--mono);font-size:.64rem;color:var(--faint);margin-top:5px}.checks{display:grid;gap:8px}.check{display:flex;gap:10px;align-items:flex-start;color:var(--dim);font-size:.93rem}.check input{width:16px;height:16px;margin-top:4px;accent-color:var(--signal);flex:none}.check b{color:var(--bone);font-weight:600}
+.score{display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:stretch;margin-bottom:18px}.gauge{border:1px solid var(--line);background:var(--ink2);display:grid;place-items:center;min-height:150px}.gauge .n{font-family:var(--disp);font-size:3.1rem;line-height:1;font-weight:800;color:var(--signal)}.gauge .t{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:6px}.status{border:1px solid var(--line);background:var(--panel);padding:18px}.status b{display:block;font-family:var(--disp);font-size:1.25rem;line-height:1.12;margin-bottom:8px}.status p{margin:0;color:var(--dim);font-size:.94rem}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.tab{font-family:var(--mono);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:var(--ink);border:1px solid var(--line);padding:8px 10px;cursor:pointer}.tab.on{color:var(--signal);border-color:rgba(255,106,31,.45);background:var(--soft)}.list{margin:16px 0 0;padding:0;list-style:none}.list li{padding:9px 0;border-top:1px solid var(--line);color:var(--dim)}.list li:before{content:"- ";color:var(--signal)}.output{background:var(--ink);border:1px solid var(--line);padding:16px;white-space:pre-wrap;min-height:360px;max-height:580px;overflow:auto;font-family:var(--mono);font-size:.78rem;line-height:1.58;color:var(--bone)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}.btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--signal);background:var(--signal);color:#160a03;padding:11px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:.5em}.btn:hover{background:transparent;color:var(--signal)}.btn.ghost{background:transparent;color:var(--bone);border-color:var(--line2)}.btn.ghost:hover{border-color:var(--signal);color:var(--signal)}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--bone);color:var(--ink);font-family:var(--mono);font-size:.78rem;padding:10px 16px;transition:.22s;z-index:50}.toast.show{transform:translateX(-50%) translateY(0)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--faint);font-family:var(--mono);font-size:.68rem;letter-spacing:.07em}.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}@media(max-width:960px){.hero-grid,.app{grid-template-columns:1fr}.panel.sticky{position:static}.score{grid-template-columns:1fr}.nav{display:none}}@media(max-width:620px){.grid2{grid-template-columns:1fr}header .wrap{height:auto;min-height:64px;padding-top:12px;padding-bottom:12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="/tools/"><span class="mark">M</span><span>MST Open Tools</span></a>
+    <nav class="nav" aria-label="Tool navigation">
+      <a href="/tools/">Tools</a>
+      <a href="/pid-to-native-solidworks-assembly/">Capability</a>
+      <a href="/news/">Articles</a>
+      <a href="https://github.com/shensi8312/mpw-tools" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="mono eyebrow">Free P&amp;ID / SOLIDWORKS tool</div>
+        <h1>Scope a <span>native SOLIDWORKS assembly</span> pilot from P&amp;ID.</h1>
+        <p class="lede">Build a structured intake brief for gas panels, gas sticks, gas boxes, skids and other process-equipment assemblies. The checklist focuses on P&amp;ID quality, BOM fields, customer part-library reuse, spatial envelope, UHP gas rules and review expectations.</p>
+      </div>
+      <div class="privacy"><b>Client-side only.</b> This tool does not upload drawings. Use it to prepare a brief; do not paste proprietary P&amp;ID content, customer part numbers or rulepack details unless you intend to share them.</div>
+    </div>
+  </section>
+
+  <section class="wrap app">
+    <form class="panel sticky" id="intakeForm">
+      <h2>Inputs</h2>
+      <p class="section-note">Describe the pilot shape without exposing confidential design data.</p>
+      <div class="grid2">
+        <div class="field"><label for="equipment">Equipment type</label><select id="equipment"><option>Gas panel</option><option>Gas stick</option><option>Gas box</option><option>Valve manifold box</option><option>Chemical / fluid skid</option><option>Process piping module</option><option>Other process equipment</option></select></div>
+        <div class="field"><label for="industry">Application</label><select id="industry"><option>Semiconductor UHP gas</option><option>Specialty gas delivery</option><option>Vacuum / abatement support</option><option>Chemical delivery</option><option>Industrial process skid</option><option>Research equipment</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="pidQuality">P&amp;ID status</label><select id="pidQuality"><option value="">Select status</option><option>Clean digital P&amp;ID with tags</option><option>PDF P&amp;ID, readable symbols</option><option>Legacy drawing, partial ambiguity</option><option>Redlined / as-built changes</option><option>Not ready yet</option></select></div>
+        <div class="field"><label for="solidworks">SOLIDWORKS version</label><input id="solidworks" placeholder="e.g. SOLIDWORKS 2024"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="library">Customer part library</label><select id="library"><option value="">Select status</option><option>Approved SOLIDWORKS part library exists</option><option>Partial part library exists</option><option>Supplier STEP files only</option><option>Need library cleanup first</option><option>No reusable library yet</option></select></div>
+        <div class="field"><label for="bom">BOM / tag data</label><select id="bom"><option value="">Select status</option><option>Structured BOM with tag, MPN, size, material</option><option>Partial BOM with tag and MPN</option><option>P&ID tags only</option><option>Spreadsheet needs cleanup</option><option>No BOM yet</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="envelope">Spatial envelope</label><select id="envelope"><option value="">Select status</option><option>Panel/enclosure envelope defined</option><option>Mounting rails / keep-outs defined</option><option>Approximate envelope only</option><option>No spatial constraints yet</option></select></div>
+        <div class="field"><label for="output">Expected output</label><select id="output"><option>Native SOLIDWORKS assembly proposal</option><option>Assembly plus BOM review table</option><option>Assembly plus exceptions report</option><option>Assembly plus rulepack validation notes</option><option>Pilot feasibility assessment only</option></select></div>
+      </div>
+      <div class="field"><label for="standards">Standards / rule context</label><textarea id="standards" placeholder="Examples: SEMI F82 style surface-mount expectations, UHP gas line rules, VCR fittings, C-seal/W-seal, orbital weld preferences, bend radius, service spacing, supplier-approved parts."></textarea><div class="hint">Keep proprietary rulepack details out of the public tool. High-level categories are enough.</div></div>
+      <div class="field"><label for="notes">Pilot notes</label><textarea id="notes" placeholder="Example: one gas stick family, 10-20 repeated variants, existing SOLIDWORKS library, need exception list for missing parts."></textarea></div>
+
+      <h2>Readiness checks</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="symbols"><span><b>Symbols and tags can be mapped.</b> P&amp;ID symbols, line classes and device tags are readable enough for review.</span></label>
+        <label class="check"><input type="checkbox" id="parts"><span><b>Part-library ownership is clear.</b> Customer-approved parts or supplier models can be identified.</span></label>
+        <label class="check"><input type="checkbox" id="mates"><span><b>Assembly constraints are known.</b> Mounting, orientation, spacing, routing or clearance rules are available.</span></label>
+        <label class="check"><input type="checkbox" id="review"><span><b>Engineering review is planned.</b> Output will be checked by customer engineers before release.</span></label>
+      </div>
+    </form>
+
+    <div>
+      <div class="score">
+        <div class="gauge"><div><div class="n" id="score">0</div><div class="t">intake score</div></div></div>
+        <div class="status"><b id="statusTitle">Needs intake detail</b><p id="statusText">Fill the fields to build a useful pilot brief.</p><ul class="list" id="missing"></ul></div>
+      </div>
+      <div class="panel">
+        <div class="tabs" aria-label="Generated output tabs">
+          <button class="tab on" type="button" data-mode="brief">Pilot brief</button>
+          <button class="tab" type="button" data-mode="questions">Engineer questions</button>
+          <button class="tab" type="button" data-mode="scope">Suggested scope</button>
+        </div>
+        <pre class="output" id="generated"></pre>
+        <div class="actions">
+          <button class="btn" type="button" id="copyBtn">Copy output</button>
+          <button class="btn ghost" type="button" id="mdBtn">Download Markdown</button>
+          <button class="btn ghost" type="button" id="jsonBtn">Download JSON</button>
+          <a class="btn ghost" href="/pid-to-native-solidworks-assembly/">Capability page</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap foot"><span>© 2023-2026 Moore Solution Technology Pte. Ltd. Singapore</span><span><a href="/tools/">Tools</a> · <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SOLIDWORKS</a> · <a href="mailto:sales@mst-sg.com">sales@mst-sg.com</a></span></div></footer>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+var ids = ['equipment','industry','pidQuality','solidworks','library','bom','envelope','output','standards','notes'];
+var checks = ['symbols','parts','mates','review'];
+var required = [
+  ['pidQuality','P&ID status'],
+  ['solidworks','SOLIDWORKS version'],
+  ['library','Customer part-library status'],
+  ['bom','BOM / tag data'],
+  ['envelope','Spatial envelope']
+];
+var mode = 'brief';
+function val(id){return (document.getElementById(id).value || '').trim();}
+function checked(id){return document.getElementById(id).checked;}
+function data(){
+  var d = {};
+  ids.forEach(function(id){d[id]=val(id);});
+  d.readiness = {};
+  checks.forEach(function(id){d.readiness[id]=checked(id);});
+  return d;
+}
+function missingItems(d){
+  var m = [];
+  required.forEach(function(pair){ if(!d[pair[0]]) m.push(pair[1]); });
+  if(!d.readiness.symbols) m.push('Readable P&ID symbols, line classes and device tags');
+  if(!d.readiness.parts) m.push('Part-library ownership and approved part source');
+  if(!d.readiness.mates) m.push('Assembly constraints: spacing, orientation, routing, keep-outs');
+  if(!d.readiness.review) m.push('Customer engineering review and release-control plan');
+  return m;
+}
+function score(d){
+  var total = required.length + checks.length + 2;
+  var done = required.filter(function(pair){return !!d[pair[0]];}).length + checks.filter(function(id){return d.readiness[id];}).length;
+  if(d.standards) done++;
+  if(d.notes) done++;
+  return Math.round(done / total * 100);
+}
+function brief(d,s,miss){
+  return [
+    '# P&ID-to-native-SOLIDWORKS Assembly Intake Brief',
+    '',
+    'Generated locally in the MST P&ID Assembly Intake Checklist.',
+    '',
+    'Claim-safe boundary: expected output is a reviewable native SOLIDWORKS assembly proposal, not a substitute for customer engineering review, validation, release controls or production signoff.',
+    '',
+    '## Pilot context',
+    '- Equipment type: ' + (d.equipment || 'TBD'),
+    '- Application: ' + (d.industry || 'TBD'),
+    '- P&ID status: ' + (d.pidQuality || 'TBD'),
+    '- SOLIDWORKS version: ' + (d.solidworks || 'TBD'),
+    '- Expected output: ' + (d.output || 'TBD'),
+    '',
+    '## Data readiness',
+    '- Customer part library: ' + (d.library || 'TBD'),
+    '- BOM / tag data: ' + (d.bom || 'TBD'),
+    '- Spatial envelope: ' + (d.envelope || 'TBD'),
+    '- Symbols and tags can be mapped: ' + (d.readiness.symbols ? 'yes' : 'TBD'),
+    '- Part-library ownership is clear: ' + (d.readiness.parts ? 'yes' : 'TBD'),
+    '- Assembly constraints are known: ' + (d.readiness.mates ? 'yes' : 'TBD'),
+    '- Engineering review is planned: ' + (d.readiness.review ? 'yes' : 'TBD'),
+    '- Intake score: ' + s + '/100',
+    '',
+    '## Standards / rule context',
+    d.standards || 'TBD',
+    '',
+    '## Pilot notes',
+    d.notes || 'TBD',
+    '',
+    '## Missing or open items',
+    miss.length ? miss.map(function(x){return '- ' + x;}).join('\n') : '- No major first-pass intake fields missing.'
+  ].join('\n');
+}
+function questions(d){
+  return [
+    '# Engineer Questions Before a P&ID-to-SOLIDWORKS Pilot',
+    '',
+    '1. Which P&ID symbols map to which approved SOLIDWORKS parts, subassemblies or configurable templates?',
+    '2. Are device tags, line IDs, sizes, materials, pressure class and flow direction available in a structured BOM or tag table?',
+    '3. Which customer part library is authoritative: native SLDPRT/SLDASM, supplier STEP files, ERP part master or a hybrid?',
+    '4. Which parts require exact native features and which can remain imported geometry?',
+    '5. What spatial envelope, mounting rail, panel size, keep-out, service clearance and bend-radius rules constrain placement?',
+    '6. What UHP gas or process-specific standards apply, such as SEMI F82 style surface-mount expectations, VCR, C-seal/W-seal, orbital weld or electropolished tube rules?',
+    '7. What counts as an exception: missing part, ambiguous symbol, impossible mate, clearance conflict, unsupported fitting or BOM mismatch?',
+    '8. Who reviews the generated native SOLIDWORKS assembly proposal before it enters normal release controls?',
+    '',
+    'Current application: ' + (d.industry || 'TBD') + ' / ' + (d.equipment || 'TBD')
+  ].join('\n');
+}
+function scope(d,s,miss){
+  var complexity = (d.library || '').indexOf('No reusable') >= 0 || (d.bom || '').indexOf('No BOM') >= 0 ? 'library-and-data-cleanup-first' : s >= 80 ? 'assembly-generation-pilot' : 'limited-feasibility-pilot';
+  return [
+    '# Suggested Pilot Scope',
+    '',
+    'Recommended pilot type: ' + complexity,
+    '',
+    complexity === 'assembly-generation-pilot'
+      ? '- Use one representative assembly family with clear P&ID tags, BOM fields and customer-approved parts.\n- Generate a reviewable native SOLIDWORKS assembly proposal with feature tree, mates, BOM context and exception report.\n- Validate against customer rule expectations and engineering review notes.'
+      : complexity === 'library-and-data-cleanup-first'
+        ? '- Start by mapping P&ID symbols and BOM/tag data to a customer-approved part-library structure.\n- Identify missing native parts, supplier model gaps and rulepack assumptions.\n- Run a small assembly slice only after the library source of truth is clear.'
+        : '- Start with a narrow feasibility slice: one gas stick, one panel zone or one repeated module.\n- Document missing symbols, BOM gaps, part-library ambiguity and spatial/routing assumptions.\n- Use the result to decide whether the next step is library cleanup, rulepack definition or assembly generation.',
+    '',
+    'Good first pilot size:',
+    '- 1 equipment family or 1 panel section',
+    '- 10-50 tagged components',
+    '- Known customer part-library source',
+    '- Explicit exception list instead of silent auto-correction',
+    '',
+    'Open items to close:',
+    miss.length ? miss.map(function(x){return '- ' + x;}).join('\n') : '- No major first-pass intake fields missing.'
+  ].join('\n');
+}
+function render(){
+  var d = data();
+  var miss = missingItems(d);
+  var s = score(d);
+  document.getElementById('score').textContent = s;
+  var title = s >= 82 ? 'Ready for a focused pilot' : s >= 58 ? 'Feasible, but narrow the scope' : 'Needs intake detail';
+  var text = s >= 82 ? 'This looks suitable for a focused reviewable assembly pilot, subject to customer data access and engineering review.' : s >= 58 ? 'A limited feasibility slice is possible, but missing items should be closed before broader assembly generation.' : 'The brief is not yet specific enough to evaluate native assembly generation.';
+  document.getElementById('statusTitle').textContent = title;
+  document.getElementById('statusText').textContent = text;
+  document.getElementById('missing').innerHTML = (miss.length ? miss : ['No major first-pass intake fields missing.']).map(function(x){return '<li>'+escapeHtml(x)+'</li>';}).join('');
+  document.getElementById('generated').textContent = mode === 'questions' ? questions(d) : mode === 'scope' ? scope(d,s,miss) : brief(d,s,miss);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function download(name,type,text){var blob=new Blob([text],{type:type});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();URL.revokeObjectURL(a.href);a.remove();}
+function showToast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},1600);}
+ids.concat(checks).forEach(function(id){document.getElementById(id).addEventListener('input',render);document.getElementById(id).addEventListener('change',render);});
+document.querySelectorAll('.tab').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});btn.classList.add('on');mode=btn.dataset.mode;render();};});
+document.getElementById('copyBtn').onclick=function(){navigator.clipboard.writeText(document.getElementById('generated').textContent).then(function(){showToast('Output copied');});};
+document.getElementById('mdBtn').onclick=function(){download('pid-assembly-intake.md','text/markdown;charset=utf-8',document.getElementById('generated').textContent);};
+document.getElementById('jsonBtn').onclick=function(){download('pid-assembly-intake.json','application/json;charset=utf-8',JSON.stringify(data(),null,2));};
+render();
+</script>
+</body>
+</html>
