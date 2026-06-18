@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">Indicative mature-node MPW coverage</title>
+  <desc id="desc">An indicative view of mature-node and specialty-process MPW scoping from 0.35um to 40nm with 28 and 22nm reviewed case by case.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111923"/>
+      <stop offset="1" stop-color="#0a0d12"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff6a1f"/>
+      <stop offset=".72" stop-color="#ffb36a"/>
+      <stop offset="1" stop-color="#8fd5ff"/>
+    </linearGradient>
+    <style>
+      .bg{fill:url(#bg)}
+      .grid{stroke:#263244;stroke-width:1;opacity:.65}
+      .h{font:700 31px Inter,Arial,sans-serif;fill:#f3eadc}
+      .p{font:500 16px Inter,Arial,sans-serif;fill:#a9b3c2}
+      .small{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.4px;fill:#8fd5ff}
+      .label{font:700 15px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#f3eadc}
+      .muted{font:500 13px Inter,Arial,sans-serif;fill:#7f8b9d}
+      .chip{fill:#151c28;stroke:#2d394d;stroke-width:1.3}
+      .chipText{font:700 15px Inter,Arial,sans-serif;fill:#dbe6f6}
+      .case{fill:#151c28;stroke:#8fd5ff;stroke-width:1.5;stroke-dasharray:6 5}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="420"/>
+  <path class="grid" d="M90 82h940M90 152h940M90 222h940M90 292h940M90 362h940M180 52v318M340 52v318M500 52v318M660 52v318M820 52v318M980 52v318"/>
+  <text x="70" y="58" class="small">INDICATIVE COVERAGE · PARTNER CONFIRMED CASE BY CASE</text>
+  <text x="70" y="101" class="h">Mature-node MPW scoping</text>
+  <text x="70" y="132" class="p">Use node range and process family for first RFQ screening. Final fit is not automatic.</text>
+  <rect x="110" y="188" width="770" height="26" rx="13" fill="url(#bar)"/>
+  <rect x="886" y="188" width="134" height="26" rx="13" class="case"/>
+  <text x="110" y="174" class="label">0.35um</text>
+  <text x="286" y="174" class="label">180nm</text>
+  <text x="442" y="174" class="label">130nm</text>
+  <text x="596" y="174" class="label">90/65nm</text>
+  <text x="752" y="174" class="label">55/40nm</text>
+  <text x="890" y="174" class="label">28/22nm</text>
+  <text x="111" y="237" class="muted">Mature-node and specialty-process window</text>
+  <text x="889" y="237" class="muted">case by case</text>
+  <g transform="translate(70 282)">
+    <rect class="chip" width="130" height="42" rx="8"/><text x="26" y="27" class="chipText">Analog</text>
+    <rect class="chip" x="146" width="130" height="42" rx="8"/><text x="177" y="27" class="chipText">Mixed-signal</text>
+    <rect class="chip" x="292" width="130" height="42" rx="8"/><text x="335" y="27" class="chipText">RF</text>
+    <rect class="chip" x="438" width="130" height="42" rx="8"/><text x="474" y="27" class="chipText">BCD</text>
+    <rect class="chip" x="584" width="130" height="42" rx="8"/><text x="617" y="27" class="chipText">Power</text>
+    <rect class="chip" x="730" width="130" height="42" rx="8"/><text x="763" y="27" class="chipText">Sensor</text>
+    <rect class="chip" x="876" width="130" height="42" rx="8"/><text x="914" y="27" class="chipText">eNVM</text>
+  </g>
+  <text x="70" y="367" class="p">First intake: no GDS or confidential design IP. Availability, price, schedule and PDK path require confirmation.</text>
+</svg>

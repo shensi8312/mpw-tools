@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-label="AI engineering platform visual">
+  <defs>
+    <radialGradient id="glow" cx=".5" cy=".45" r=".58">
+      <stop offset="0" stop-color="#1d3142"/>
+      <stop offset="1" stop-color="#070a0f"/>
+    </radialGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7fd6ff"/>
+      <stop offset="1" stop-color="#ff7a35"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="600" fill="url(#glow)"/>
+  <path d="M120 300h720M480 96v408M250 170l500 320M750 170L250 490" stroke="#273849" stroke-width="2" opacity=".65"/>
+  <circle cx="480" cy="300" r="74" fill="#111923" stroke="url(#line)" stroke-width="6"/>
+  <circle cx="250" cy="170" r="44" fill="#111923" stroke="#314456" stroke-width="4"/>
+  <circle cx="750" cy="170" r="44" fill="#111923" stroke="#314456" stroke-width="4"/>
+  <circle cx="250" cy="490" r="44" fill="#111923" stroke="#314456" stroke-width="4"/>
+  <circle cx="750" cy="490" r="44" fill="#111923" stroke="#314456" stroke-width="4"/>
+  <text x="480" y="292" text-anchor="middle" fill="#ece7dd" font-family="Arial, sans-serif" font-size="30" font-weight="700">AI</text>
+  <text x="480" y="328" text-anchor="middle" fill="#8fa0b4" font-family="Menlo, Consolas, monospace" font-size="15" letter-spacing="3">PLATFORM</text>
+  <text x="250" y="176" text-anchor="middle" fill="#ece7dd" font-family="Arial, sans-serif" font-size="17" font-weight="700">VM</text>
+  <text x="750" y="176" text-anchor="middle" fill="#ece7dd" font-family="Arial, sans-serif" font-size="17" font-weight="700">DOE</text>
+  <text x="250" y="496" text-anchor="middle" fill="#ece7dd" font-family="Arial, sans-serif" font-size="17" font-weight="700">CAD</text>
+  <text x="750" y="496" text-anchor="middle" fill="#ece7dd" font-family="Arial, sans-serif" font-size="17" font-weight="700">GEO</text>
+</svg>

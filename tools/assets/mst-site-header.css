@@ -1,0 +1,189 @@
+:root{
+  --bone-faint:#8795a8;
+  --faint:#8795a8;
+}
+#site-header{
+  position:sticky!important;
+  top:0!important;
+  z-index:50!important;
+  background:rgba(10,13,18,.74)!important;
+  backdrop-filter:blur(14px)!important;
+  border-bottom:1px solid var(--line,rgba(236,231,221,.12))!important;
+  padding:0!important;
+  margin:0!important;
+}
+#site-header .wrap.nav{
+  width:100%!important;
+  max-width:var(--maxw,1240px)!important;
+  height:66px!important;
+  margin:0 auto!important;
+  padding:0 28px!important;
+  position:relative!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  box-sizing:border-box!important;
+}
+#site-header .brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  flex:1 1 auto!important;
+  max-width:none!important;
+  font-family:var(--disp,"Bricolage Grotesque",system-ui,sans-serif)!important;
+  font-weight:800!important;
+  font-size:1.1rem!important;
+  letter-spacing:-.02em!important;
+  text-decoration:none!important;
+  border:0!important;
+  padding:0!important;
+  color:inherit!important;
+}
+#site-header .brand-logo{
+  display:block!important;
+  width:auto!important;
+  height:52px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 0 14px rgba(0,212,255,.18))!important;
+}
+#site-header .navlinks{
+  display:flex!important;
+  align-items:center!important;
+  gap:18px!important;
+  flex:0 1 auto!important;
+  justify-content:normal!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  font-family:var(--body,"Hanken Grotesk",system-ui,sans-serif)!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+#site-header .navlinks a{
+  position:relative!important;
+  color:var(--bone-dim,#9aa6b6)!important;
+  font-size:.84rem!important;
+  font-family:inherit!important;
+  font-weight:400!important;
+  line-height:1.6!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+  transition:color .2s!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+#site-header .navlinks a:hover{
+  color:var(--bone,#ece7dd)!important;
+  text-decoration:none!important;
+}
+#site-header .navlinks a::after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  bottom:-6px!important;
+  width:0!important;
+  height:1px!important;
+  background:var(--signal,#ff6a1f)!important;
+  transition:width .25s!important;
+}
+#site-header .navlinks a:hover::after{
+  width:100%!important;
+}
+#site-header .lang-switch{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+  padding:0!important;
+  font-family:var(--mono,"IBM Plex Mono",ui-monospace,monospace)!important;
+  font-size:.68rem!important;
+  line-height:1.6!important;
+  letter-spacing:.1em!important;
+  color:var(--bone-faint,#8795a8)!important;
+  white-space:nowrap!important;
+}
+#site-header .lang-switch a{
+  color:var(--bone-dim,#9aa6b6)!important;
+  text-decoration:none!important;
+  transition:color .2s!important;
+}
+#site-header .lang-switch a:hover,
+#site-header .lang-switch a.is-active{
+  color:var(--signal,#ff6a1f)!important;
+}
+#site-header .lang-switch span{
+  color:var(--line-strong,rgba(236,231,221,.22))!important;
+}
+#site-header .nav-actions-redesign{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  flex:0 1 auto!important;
+  margin:0!important;
+  padding:0!important;
+}
+#site-header .nav-mail{
+  font-family:var(--mono,"IBM Plex Mono",ui-monospace,monospace)!important;
+  font-size:.7rem!important;
+  line-height:1.6!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+  color:var(--bone-dim,#9aa6b6)!important;
+  text-decoration:none!important;
+  transition:color .2s!important;
+  white-space:nowrap!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+#site-header .nav-mail:hover{
+  color:var(--signal,#ff6a1f)!important;
+}
+@media(max-width:760px){
+  #site-header .wrap.nav{
+    height:66px!important;
+    padding:0 20px!important;
+    gap:14px!important;
+  }
+  #site-header .navlinks{
+    display:none!important;
+  }
+  #site-header .nav-actions-redesign{
+    gap:9px!important;
+  }
+  #site-header .nav-mail{
+    display:none!important;
+  }
+}
+@media(max-width:430px){
+  #site-header .wrap.nav{
+    padding:0 18px!important;
+    gap:12px!important;
+  }
+  #site-header .brand{
+    flex:0 0 auto!important;
+    max-width:none!important;
+  }
+  #site-header .brand-logo{
+    height:48px!important;
+  }
+  #site-header .lang-switch{
+    font-size:.6rem!important;
+    gap:5px!important;
+  }
+  #site-header .nav-actions-redesign{
+    gap:0!important;
+  }
+}
+@media(max-width:360px){
+  #site-header .lang-switch{
+    gap:4px!important;
+    letter-spacing:.06em!important;
+  }
+}

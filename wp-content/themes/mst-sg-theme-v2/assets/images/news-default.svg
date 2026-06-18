@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-label="MST news visual">
+  <rect width="960" height="600" fill="#080b10"/>
+  <path d="M0 150h960M0 300h960M0 450h960M240 0v600M480 0v600M720 0v600" stroke="#24303d" stroke-width="1" opacity=".7"/>
+  <rect x="96" y="96" width="768" height="408" rx="20" fill="#111923" stroke="#2d3a48" stroke-width="2"/>
+  <text x="128" y="162" fill="#8fa0b4" font-family="Menlo, Consolas, monospace" font-size="22" letter-spacing="4">MST NEWS</text>
+  <path d="M128 238h560M128 304h650M128 370h460" stroke="#ece7dd" stroke-width="20" stroke-linecap="round" opacity=".9"/>
+  <path d="M128 442h320" stroke="#ff7a35" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="760" cy="418" r="42" fill="#ff7a35" opacity=".92"/>
+</svg>

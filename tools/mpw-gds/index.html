@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local GDSII Inspector — die size, layers &amp; cell tree, 100% in your browser | MST</title>
+<meta name="description" content="Free, open-source GDSII (.gds) inspector that runs entirely in your browser — nothing is uploaded. Reads top cell, die size, layer list, cell hierarchy and element counts, then builds a non-confidential RFQ summary. No server, no GDS leaves your machine.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://mst-sg.com/tools/mpw-gds/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Local GDSII Inspector — die size, layers &amp; cell tree, 100% in your browser">
+<meta property="og:description" content="Inspect a .gds file fully client-side — top cell, die size, layers, cell tree — nothing uploaded. Builds a non-confidential RFQ summary. Open-source.">
+<meta property="og:url" content="https://mst-sg.com/tools/mpw-gds/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className='js';</script>
+<style>
+:root{
+  --ink:#0a0d12; --ink2:#11151c; --panel:#141923; --panel2:#1a212d;
+  --bone:#ECE7DD; --muted:#9aa4b2; --faint:#5c6675;
+  --signal:#FF6A1F; --signal-soft:rgba(255,106,31,.14);
+  --cool:#7FB7D6; --line:rgba(236,231,221,.12); --line2:rgba(236,231,221,.07);
+  --ok:#6fcf97; --warn:#f2c14e; --bad:#e06b6b;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Hanken Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--ink); color:var(--bone);
+  font-family:var(--body); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--line2) 1px,transparent 1px),linear-gradient(90deg,var(--line2) 1px,transparent 1px);
+  background-size:48px 48px; background-position:center top;
+}
+a{color:var(--cool);text-decoration:none} a:hover{text-decoration:underline}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--signal)}
+.mono{font-family:var(--mono)}
+
+header.site{border-bottom:1px solid var(--line);background:rgba(10,13,18,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 22px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:800;letter-spacing:-.01em;font-size:18px}
+.brand b{color:var(--signal)}
+.navlinks{display:flex;gap:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;flex-wrap:wrap}
+.navlinks a{color:var(--muted)} .navlinks a:hover{color:var(--bone);text-decoration:none}
+
+.hero{padding:44px 0 22px}
+.hero h1{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1.05;font-size:clamp(28px,4.6vw,48px);margin:.35em 0 .2em;color:var(--bone)}
+.hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:62ch;margin:0}
+.privacy{display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:rgba(111,207,151,.1);border:1px solid rgba(111,207,151,.35);color:var(--ok);border-radius:999px;padding:7px 14px;font-family:var(--mono);font-size:12.5px;letter-spacing:.02em}
+.privacy b{color:var(--ok)}
+
+.dropzone{margin:26px 0 8px;border:1.5px dashed var(--line);border-radius:16px;background:linear-gradient(180deg,var(--panel),var(--ink2));padding:46px 24px;text-align:center;transition:border-color .15s,background .15s;cursor:pointer}
+.dropzone:hover,.dropzone.drag{border-color:var(--signal);background:var(--signal-soft)}
+.dropzone .big{font-family:var(--disp);font-weight:700;font-size:21px;color:var(--bone);margin:0 0 6px}
+.dropzone .sub{color:var(--muted);font-size:14px;margin:0}
+.dropzone .pick{display:inline-block;margin-top:16px;background:var(--signal);color:#1a0d05;font-family:var(--mono);font-weight:600;letter-spacing:.03em;border-radius:10px;padding:11px 20px}
+.dropzone input[type=file]{display:none}
+.prog{height:6px;border-radius:6px;background:var(--panel2);overflow:hidden;margin:16px auto 0;max-width:360px;display:none}
+.prog.on{display:block}
+.prog i{display:block;height:100%;width:0;background:var(--signal);transition:width .12s}
+
+.results{display:none;flex-direction:column;gap:22px;padding:8px 0 60px}
+.results.on{display:flex}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.kpi .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.kpi .val{font-family:var(--disp);font-weight:800;font-size:clamp(20px,2.7vw,28px);line-height:1.1;margin-top:6px;color:var(--bone);word-break:break-word}
+.kpi .val small{font-size:12.5px;color:var(--muted);font-weight:500;font-family:var(--body)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.box h3{font-family:var(--disp);font-weight:700;font-size:14px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.box h3 .pill{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--faint);border:1px solid var(--line);border-radius:6px;padding:2px 7px;letter-spacing:.06em}
+.die-svg{width:100%;height:auto;display:block;background:var(--ink);border-radius:8px;border:1px solid var(--line2)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-family:var(--mono);font-size:13.5px;margin:0}
+.dl dt{color:var(--faint)} .dl dd{margin:0;color:var(--bone);word-break:break-word}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+.tablebox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 4px;overflow-x:auto}
+th,td{text-align:right;padding:9px 14px;border-bottom:1px solid var(--line2);font-family:var(--mono);white-space:nowrap}
+th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:500}
+td.l,th.l{text-align:left}
+tr:last-child td{border-bottom:0}
+
+.tree{font-family:var(--mono);font-size:13px;line-height:1.7;white-space:nowrap;overflow-x:auto}
+.tree .node{color:var(--bone)} .tree .cnt{color:var(--signal)} .tree .kind{color:var(--faint)}
+.tree .top{color:var(--cool)} .tree .cyc{color:var(--warn)} .tree .ext{color:var(--bad)}
+.tree .ind{color:var(--faint)}
+
+.warnbox{background:rgba(242,193,78,.1);border:1px solid rgba(242,193,78,.4);border-radius:12px;padding:14px 18px;font-size:13.5px}
+.warnbox b{color:var(--warn)} .warnbox ul{margin:8px 0 0;padding-left:18px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.errbox{background:rgba(224,107,107,.1);border:1px solid rgba(224,107,107,.45);border-radius:12px;padding:16px 18px;color:var(--bone);font-size:14.5px;display:none}
+.errbox.on{display:block} .errbox b{color:var(--bad)}
+
+.rfq{background:linear-gradient(110deg,var(--panel2),var(--ink2));border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.rfq h3{font-family:var(--disp);font-size:17px;margin:0 0 4px;color:var(--bone)}
+.rfq p{color:var(--muted);font-size:14px;margin:0 0 14px;max-width:62ch}
+.rfq pre{background:var(--ink);border:1px solid var(--line2);border-radius:8px;padding:14px;font-family:var(--mono);font-size:12.5px;color:var(--bone);white-space:pre-wrap;margin:0 0 14px;max-height:220px;overflow:auto}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:.04em;border-radius:9px;padding:11px 16px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--bone);text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--cool);text-decoration:none}
+.btn.go{background:var(--signal);color:#1a0d05;border-color:var(--signal);font-weight:600}
+.btn.go:hover{filter:brightness(1.08)}
+
+details.how{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 18px;margin-top:6px}
+details.how summary{cursor:pointer;font-family:var(--disp);font-weight:700;font-size:15px;padding:14px 0;list-style:none}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:'+ ';color:var(--signal);font-family:var(--mono)}
+details.how[open] summary::before{content:'– '}
+details.how .body{padding:0 0 16px;color:var(--muted);font-size:14px}
+details.how code{font-family:var(--mono);background:var(--ink);padding:2px 6px;border-radius:5px;color:var(--cool);font-size:13px}
+details.how h4{color:var(--bone);font-family:var(--disp);font-size:13.5px;margin:16px 0 6px}
+
+footer.site{border-top:1px solid var(--line);margin-top:30px;padding:26px 0;color:var(--faint);font-family:var(--mono);font-size:12px}
+footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--bone);color:var(--ink);font-family:var(--mono);font-size:13px;padding:11px 18px;border-radius:10px;transition:transform .25s ease,visibility .25s;z-index:50;visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+.nojs{display:none}
+html:not(.js) .nojs{display:block;padding:40px 0;color:var(--warn)}
+html:not(.js) .dropzone{display:none}
+</style>
+<link rel="stylesheet" href="/tools/assets/mst-site-header.css">
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="MST Home">
+      <img
+        src="/wp-content/themes/mst-sg-theme-v2/assets/images/logo-header.png"
+        alt="Moore Solution Technology"
+        class="brand-logo"
+        width="44"
+        height="44"
+        loading="eager"
+        decoding="async"
+      >
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="https://store.mst-sg.com/?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=store_entrance&amp;utm_content=nav_store_rfq" target="_blank" rel="noopener">Store / RFQ</a>
+      <a href="/mpw/">MPW</a>
+      <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a>
+      <a href="/tools/">Tools</a>
+      <a href="/solutions/">Design Automation</a>
+      <a href="/news/">News</a>
+    </nav>
+    <div class="lang-switch" aria-label="Language">
+      <a href="/tools/mpw-gds/?lang=en" lang="en" hreflang="en" class="is-active">EN</a>
+      <span aria-hidden="true">/</span>
+      <a href="/tools/mpw-gds/?lang=zh" lang="zh" hreflang="zh">中文</a>
+    </div>
+    <div class="nav-actions-redesign">
+      <a class="nav-mail" href="https://qiye.aliyun.com" target="_blank" rel="noopener">Mail</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap nojs">JavaScript is required for the inspector. It parses your file locally in your browser; the documented method is at the bottom of this page.</div>
+
+<section class="wrap hero">
+  <div class="eyebrow">Free · open-source · runs 100% in your browser</div>
+  <h1>Local GDSII Inspector</h1>
+  <p class="lede">Drop a <code style="font-family:var(--mono);color:var(--cool)">.gds</code> file to read its top cell, die size, layer list, cell hierarchy and element counts — then generate a non-confidential RFQ summary. Built to prove our promise: <strong>we never take your layout. Here, it doesn't even leave your machine.</strong></p>
+  <div class="privacy">🔒 <b>100% local.</b> No upload, no server, no backend — parsed in a Web Worker on your device.</div>
+</section>
+
+<main class="wrap">
+  <label class="dropzone" id="drop">
+    <p class="big">Drop your <span class="mono">.gds</span> file here</p>
+    <p class="sub">or click to choose — it is read locally and never uploaded. OASIS (.oas) not yet supported.</p>
+    <span class="pick">Choose .gds file</span>
+    <input type="file" id="file" accept=".gds,.gds2,.sf,.strm,.gdsii,application/octet-stream">
+    <div class="prog" id="prog"><i id="progBar"></i></div>
+  </label>
+
+  <div class="errbox" id="err"></div>
+
+  <section class="results" id="results">
+    <div class="cards" id="kpis"></div>
+
+    <div class="grid2">
+      <div class="box">
+        <h3>Representative die <span class="pill" id="dieScopePill">largest top cell</span></h3>
+        <svg class="die-svg" id="dieSvg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid meet"></svg>
+        <dl class="dl" id="dieDl" style="margin-top:14px"></dl>
+      </div>
+      <div class="box">
+        <h3>Library</h3>
+        <dl class="dl" id="libDl"></dl>
+        <h3 style="margin-top:18px">Elements</h3>
+        <dl class="dl" id="elemDl"></dl>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Layers <span class="pill" id="layerPill"></span></h3>
+      <div class="tablebox" style="border:0;padding:0">
+        <table><thead><tr><th class="l">Layer</th><th class="l">Datatype</th><th>Elements</th></tr></thead><tbody id="layerBody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Cell hierarchy <span class="pill" id="treePill"></span></h3>
+      <div class="tree" id="tree"></div>
+    </div>
+
+    <div class="warnbox" id="warnbox" style="display:none"></div>
+
+    <div class="rfq">
+      <h3>Non-confidential RFQ summary</h3>
+      <p>Only metadata below — die size, counts, units. <strong>No geometry, no polygons, no IP.</strong> Send it (or the deep-link) to start a partner-confirmed MPW quote.</p>
+      <pre id="rfqText"></pre>
+      <div class="btnrow">
+        <a class="btn go" id="rfqLink" href="https://store.mst-sg.com/services/mpw-tapeout-rfq">Start MPW RFQ with this die size →</a>
+        <button type="button" class="btn" id="copyRfq">Copy summary</button>
+        <button type="button" class="btn" id="dlRfq">Download .txt</button>
+        <button type="button" class="btn" id="again">Inspect another file</button>
+      </div>
+    </div>
+  </section>
+
+  <details class="how">
+    <summary>How it works (and what stays private)</summary>
+    <div class="body">
+      <h4>Nothing is uploaded</h4>
+      Your file is read with <code>FileReader</code> into memory and parsed by an inline <code>Web Worker</code> on your own device. There is no backend and no network request with your data. The "RFQ" buttons only build a link/text from the <em>metadata</em> (die size + counts) you see on screen.
+      <h4>What it reads</h4>
+      It walks the GDSII record stream (big-endian), decodes the <code>UNITS</code> record's metres-per-database-unit to get true micrometres, collects every cell (<code>STRNAME</code>), every reference (<code>SREF</code>/<code>AREF</code>) to build the hierarchy, and every <code>(LAYER, DATATYPE)</code> pair. The <strong>die size</strong> is the bounding box of the top cell, computed recursively through all instances — each instance transformed by its reflection → magnification → rotation → translation, with arrays (<code>AREF</code>) handled in closed form. Reference cycles and missing cells are detected and skipped, never hung on.
+      <h4>Approximations</h4>
+      The die box is an axis-aligned bounding box (slightly conservative for rotated layouts); <code>PATH</code> width end-caps are approximated to ±½ width; <code>TEXT</code> labels are excluded from die size (they can sit outside the layout). Random things a real quote depends on — process, mask grade, packaging — aren't in a GDS and aren't inferred here.
+      <h4>Privacy &amp; licence</h4>
+      Open-source (MIT). One self-contained HTML file. Read it, fork it, run it offline. This mirrors how we work: at the RFQ stage we take a high-level brief, <strong>not your GDS</strong>.
+    </div>
+  </details>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MST · mature-node MPW RFQ coordination · Singapore · we are not a foundry, and we don't take GDS at intake</span>
+    <span>Open-source · MIT · runs locally</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===================== GDSII PARSER (runs in a Web Worker) ===================== -->
+<script type="text/worker" id="gdsWorker">
+"use strict";
+self.onmessage = function(ev){
+  var buf = ev.data && ev.data.buf;
+  if(!buf){ self.postMessage({type:'error', message:'No data received.'}); return; }
+  try { self.postMessage({type:'result', result: parseGds(buf)}); }
+  catch(e){ self.postMessage({type:'error', message: (e && e.message) ? e.message : String(e)}); }
+};
+
+function parseGds(buf){
+  var dv = new DataView(buf);
+  var n = dv.byteLength;
+  var warnings = [], warned = {};
+  function warn(m){ if(!warned[m]){ warned[m]=1; if(warnings.length<300) warnings.push(m); } }
+
+  if(n === 0) throw new Error('File is empty.');
+  if(n < 4)   throw new Error('Not a GDSII file (too small).');
+  var magic=''; for(var mi=0; mi<Math.min(11,n); mi++) magic += String.fromCharCode(dv.getUint8(mi));
+  if(magic.indexOf('%SEMI-OAS') === 0) throw new Error('This is an OASIS (.oas) file, not GDSII. OASIS is not supported yet.');
+  if(dv.getUint8(2) !== 0x00) warn('File does not start with a GDS HEADER record — may be corrupt or non-GDS.');
+
+  function readReal8(off){
+    if(off+8 > n) return 0;
+    var hi = dv.getUint32(off, false), lo = dv.getUint32(off+4, false);
+    if(hi===0 && lo===0) return 0;
+    var sign = (hi & 0x80000000) ? -1 : 1;
+    var exp  = ((hi >>> 24) & 0x7f) - 64;
+    var mantHi = hi & 0x00ffffff;            // top 24 mantissa bits
+    var p = 4 * exp;                          // base-16 -> 2^(4*exp)
+    return sign * (mantHi * Math.pow(2, p-24) + lo * Math.pow(2, p-56));
+  }
+  function readAscii(off, len){
+    var end = off + Math.max(0, Math.min(len, n-off));
+    while(end > off && dv.getUint8(end-1) === 0) end--;   // strip NUL pad
+    var s = '';
+    for(var i=off; i<end; i++){ var c = dv.getUint8(i); s += (c>=0x20 && c<0x7f) ? String.fromCharCode(c) : '�'; }
+    return s.length > 4096 ? s.slice(0,4096)+'…' : s;
+  }
+  function fin(v, d){ return (typeof v==='number' && isFinite(v)) ? v : d; }
+
+  var cells = {}, cellOrder = [];
+  var cur = null, elem = null;
+  var header=null, libname=null, units=null, umPerDbu=null, unitsBad=false;
+  var totals = {BOUNDARY:0,PATH:0,BOX:0,SREF:0,AREF:0,TEXT:0,NODE:0};
+  var globalLayers = {};
+  var truncated = false;
+
+  function newCell(name){ var c={name:name, bbox:null, refs:[], layers:{}, elemCounts:{}}; cells[name]=c; cellOrder.push(name); return c; }
+  function startElem(t){ if(elem) commitElem(); elem={type:t, xy:[], layer:null, datatype:null, texttype:null, boxtype:null, width:0, mag:1, angle:0, reflectX:false, sname:'', cols:0, rows:0}; }
+  function expandPt(b,x,y){ if(!isFinite(x)||!isFinite(y)) return b; if(!b) return {minX:x,minY:y,maxX:x,maxY:y}; if(x<b.minX)b.minX=x; if(y<b.minY)b.minY=y; if(x>b.maxX)b.maxX=x; if(y>b.maxY)b.maxY=y; return b; }
+  function commitElem(){
+    if(!elem){ return; }
+    var et = elem.type;
+    if(!cur){ warn('element found outside a structure — ignored.'); elem=null; return; }
+    if(et==='BOUNDARY'||et==='PATH'||et==='BOX'||et==='TEXT'||et==='NODE'){
+      var dt = (et==='TEXT') ? fin(elem.texttype,0) : (et==='BOX') ? fin(elem.boxtype,0) : fin(elem.datatype,0);
+      var L = elem.layer; if(L==null){ if(et==='BOUNDARY'||et==='PATH'||et==='BOX') warn('element missing LAYER — defaulted to 0.'); L=0; }
+      var key = L+'/'+dt;
+      globalLayers[key] = (globalLayers[key]||0)+1;
+      cur.layers[key] = (cur.layers[key]||0)+1;
+      if((et==='BOUNDARY'||et==='BOX') && elem.xy.length){ for(var i=0;i<elem.xy.length;i++) cur.bbox=expandPt(cur.bbox, elem.xy[i][0], elem.xy[i][1]); }
+      else if(et==='PATH' && elem.xy.length){ var hw=Math.abs(elem.width||0)/2; for(var j=0;j<elem.xy.length;j++){ cur.bbox=expandPt(cur.bbox, elem.xy[j][0]-hw, elem.xy[j][1]-hw); cur.bbox=expandPt(cur.bbox, elem.xy[j][0]+hw, elem.xy[j][1]+hw);} }
+      totals[et]++; cur.elemCounts[et]=(cur.elemCounts[et]||0)+1;
+    } else if(et==='SREF' || et==='AREF'){
+      var ref={sname:elem.sname||'', kind:et, reflectX:elem.reflectX, mag:fin(elem.mag,1)||1, angleDeg:fin(elem.angle,0), origin:{x:0,y:0}, instances:1};
+      if(elem.xy.length>=1){ ref.origin={x:elem.xy[0][0], y:elem.xy[0][1]}; }
+      if(et==='AREF'){
+        var cols=elem.cols|0, rows=elem.rows|0;
+        if(cols>0 && rows>0 && elem.xy.length>=3){
+          var p1=elem.xy[0],p2=elem.xy[1],p3=elem.xy[2];
+          ref.cols=cols; ref.rows=rows;
+          ref.colVec={x:(p2[0]-p1[0])/cols, y:(p2[1]-p1[1])/cols};
+          ref.rowVec={x:(p3[0]-p1[0])/rows, y:(p3[1]-p1[1])/rows};
+          ref.origin={x:p1[0], y:p1[1]};
+          ref.instances=cols*rows;
+        } else { warn('AREF with invalid COLROW/XY — treated as a single instance.'); ref.cols=1; ref.rows=1; ref.colVec={x:0,y:0}; ref.rowVec={x:0,y:0}; ref.instances=1; }
+      }
+      cur.refs.push(ref); totals[et]++; cur.elemCounts[et]=(cur.elemCounts[et]||0)+1;
+    }
+    elem=null;
+  }
+
+  var cursor=0, recordCount=0, expectName=false;
+  var t0 = (self.performance && self.performance.now) ? self.performance.now() : 0;
+  var MAX_RECORDS=50000000, MAX_MS=20000;
+
+  while(cursor+4 <= n){
+    var len = dv.getUint16(cursor, false);
+    var rt  = dv.getUint8(cursor+2);
+    if(len < 4){ warn('record length < 4 at byte '+cursor+' — aborting parse.'); truncated=true; break; }
+    if(cursor+len > n){ warn('record at byte '+cursor+' overruns end of file — partial parse.'); truncated=true; break; }
+    var ds=cursor+4, dl=len-4;
+
+    switch(rt){
+      case 0x00: if(dl>=2) header=dv.getInt16(ds,false); break;                 // HEADER
+      case 0x02: libname=readAscii(ds,dl); break;                               // LIBNAME
+      case 0x03:                                                                // UNITS
+        if(dl>=16){ units=[readReal8(ds), readReal8(ds+8)]; var mpd=units[1]; if(isFinite(mpd) && mpd>0){ umPerDbu=mpd*1e6; } else { unitsBad=true; warn('UNITS metres/db-unit is invalid — die size unavailable.'); } }
+        else { unitsBad=true; warn('UNITS record too short.'); }
+        break;
+      case 0x05: expectName=true; break;                                        // BGNSTR
+      case 0x06: { var nm=readAscii(ds,dl); cur = cells[nm] || newCell(nm); expectName=false; break; } // STRNAME
+      case 0x07: if(elem) commitElem(); cur=null; break;                        // ENDSTR
+      case 0x08: startElem('BOUNDARY'); break;
+      case 0x09: startElem('PATH'); break;
+      case 0x0A: startElem('SREF'); break;
+      case 0x0B: startElem('AREF'); break;
+      case 0x0C: startElem('TEXT'); break;
+      case 0x15: startElem('NODE'); break;
+      case 0x2D: startElem('BOX'); break;
+      case 0x0D: if(elem && dl>=2) elem.layer=dv.getInt16(ds,false); break;      // LAYER
+      case 0x0E: if(elem && dl>=2) elem.datatype=dv.getInt16(ds,false); break;   // DATATYPE
+      case 0x16: if(elem && dl>=2) elem.texttype=dv.getInt16(ds,false); break;   // TEXTTYPE
+      case 0x2E: if(elem && dl>=2) elem.boxtype=dv.getInt16(ds,false); break;    // BOXTYPE
+      case 0x0F: if(elem && dl>=4) elem.width=dv.getInt32(ds,false); break;      // WIDTH
+      case 0x10: {                                                              // XY
+        if(elem){ var cnt=(dl/8)|0; if(dl%8) warn('XY record length not a multiple of 8 — truncated.'); var pts=[]; for(var k=0;k<cnt;k++){ pts.push([dv.getInt32(ds+k*8,false), dv.getInt32(ds+k*8+4,false)]); } elem.xy=pts; }
+        break; }
+      case 0x11: commitElem(); break;                                           // ENDEL
+      case 0x12: if(elem) elem.sname=readAscii(ds,dl); break;                    // SNAME
+      case 0x13: if(elem && dl>=4){ elem.cols=dv.getInt16(ds,false); elem.rows=dv.getInt16(ds+2,false); } break; // COLROW
+      case 0x1A: if(elem && dl>=2){ var w=dv.getUint16(ds,false); elem.reflectX=(w&0x8000)!==0; } break; // STRANS
+      case 0x1B: if(elem && dl>=8) elem.mag=readReal8(ds); break;               // MAG
+      case 0x1C: if(elem && dl>=8) elem.angle=readReal8(ds); break;             // ANGLE
+      default: break;
+    }
+
+    var next=cursor+len; if(next<=cursor){ warn('cursor did not advance — aborting.'); truncated=true; break; } cursor=next;
+    if(++recordCount > MAX_RECORDS){ warn('record cap reached — aborting.'); truncated=true; break; }
+    if((recordCount & 0x3FFF) === 0){ if(t0 && self.performance.now()-t0 > MAX_MS){ warn('time budget exceeded — partial parse.'); truncated=true; break; } self.postMessage({type:'progress', pct: cursor/n}); }
+    if(rt === 0x04) break;                                                       // ENDLIB
+  }
+  if(elem) commitElem();
+
+  // ---- hierarchical, memoized, cycle-safe bbox (db units) ----
+  var bboxCache = {}, MAXDEPTH = 400;
+  function union(a,b){ if(!b) return a; if(!a) return {minX:b.minX,minY:b.minY,maxX:b.maxX,maxY:b.maxY}; return {minX:Math.min(a.minX,b.minX),minY:Math.min(a.minY,b.minY),maxX:Math.max(a.maxX,b.maxX),maxY:Math.max(a.maxY,b.maxY)}; }
+  function txPoint(x,y,reflectX,mag,ang,ox,oy){ if(reflectX) y=-y; var s=mag||1; x*=s; y*=s; var a=(ang||0)*Math.PI/180, ca=Math.cos(a), sa=Math.sin(a); return [x*ca - y*sa + ox, x*sa + y*ca + oy]; }
+  function txBBox(c,reflectX,mag,ang,ox,oy){ var pts=[[c.minX,c.minY],[c.maxX,c.minY],[c.minX,c.maxY],[c.maxX,c.maxY]]; var b=null; for(var k=0;k<4;k++){ var p=txPoint(pts[k][0],pts[k][1],reflectX,mag,ang,ox,oy); b=expandPt(b,p[0],p[1]); } return b; }
+  function placeChild(child, ref){
+    if(ref.kind==='SREF'){ return txBBox(child, ref.reflectX, ref.mag, ref.angleDeg, ref.origin.x, ref.origin.y); }
+    var cols=ref.cols||1, rows=ref.rows||1, b=null;
+    var iis=(cols<=1)?[0]:[0,cols-1], jjs=(rows<=1)?[0]:[0,rows-1];
+    for(var a=0;a<iis.length;a++) for(var d=0;d<jjs.length;d++){
+      var i=iis[a], j=jjs[d];
+      var ox=ref.origin.x + i*ref.colVec.x + j*ref.rowVec.x;
+      var oy=ref.origin.y + i*ref.colVec.y + j*ref.rowVec.y;
+      b=union(b, txBBox(child, ref.reflectX, ref.mag, ref.angleDeg, ox, oy));
+    }
+    return b;
+  }
+  function cellBBox(name, visiting, depth){
+    if(bboxCache.hasOwnProperty(name)) return bboxCache[name];
+    if(depth>MAXDEPTH){ warn('hierarchy depth cap reached at '+name+'.'); return null; }
+    if(visiting[name]){ warn('reference cycle detected at '+name+'.'); return null; }
+    var c=cells[name]; if(!c) return null;
+    visiting[name]=1;
+    var bb = c.bbox ? {minX:c.bbox.minX,minY:c.bbox.minY,maxX:c.bbox.maxX,maxY:c.bbox.maxY} : null;
+    for(var i=0;i<c.refs.length;i++){ var child=cellBBox(c.refs[i].sname, visiting, depth+1); if(child) bb=union(bb, placeChild(child, c.refs[i])); }
+    delete visiting[name];
+    bboxCache[name]=bb;
+    return bb;
+  }
+
+  // ---- top cells, unresolved ----
+  var referenced = {};
+  for(var ci=0; ci<cellOrder.length; ci++){ var cc=cells[cellOrder[ci]]; for(var ri=0; ri<cc.refs.length; ri++) referenced[cc.refs[ri].sname]=1; }
+  var topNames = cellOrder.filter(function(nm){ return !referenced[nm]; });
+  var unresolved = Object.keys(referenced).filter(function(nm){ return !cells[nm]; });
+  var fellBack = false;
+  if(topNames.length===0 && cellOrder.length>0){ fellBack=true; topNames = cellOrder.slice(); warn('No top cell found (reference cycle) — showing all cells; representative die = largest.'); }
+
+  function metrics(name){
+    var bb=cellBBox(name, {}, 0);
+    var o={name:name, bboxDb:bb, widthUm:null, heightUm:null, areaMm2:null, unitsMissing:(umPerDbu==null)};
+    if(bb && umPerDbu!=null){ o.widthUm=(bb.maxX-bb.minX)*umPerDbu; o.heightUm=(bb.maxY-bb.minY)*umPerDbu; o.areaMm2=(o.widthUm*o.heightUm)/1e6; }
+    return o;
+  }
+  var topCells = topNames.map(metrics);
+  topCells.sort(function(a,b){ var aa=(a.areaMm2==null?-1:a.areaMm2), bb2=(b.areaMm2==null?-1:b.areaMm2); if(bb2!==aa) return bb2-aa; return (a.name<b.name?-1:1); });
+
+  // ---- compact graph for the tree (per-cell refs) ----
+  var graph = cellOrder.map(function(nm){ var c=cells[nm]; return {name:nm, refs:c.refs.map(function(r){ return {sname:r.sname, kind:r.kind, instances:r.instances, cols:r.cols||null, rows:r.rows||null}; }), elemCounts:c.elemCounts}; });
+
+  var layers = Object.keys(globalLayers).map(function(key){ var pr=key.split('/'); return [parseInt(pr[0],10), parseInt(pr[1],10), globalLayers[key]]; });
+  layers.sort(function(a,b){ return a[0]-b[0] || a[1]-b[1]; });
+
+  var totalElems = totals.BOUNDARY+totals.PATH+totals.BOX+totals.SREF+totals.AREF+totals.TEXT+totals.NODE;
+
+  return {
+    ok:true, header:header, libname:libname,
+    units: units ? {uuPerDbu:units[0], metersPerDbu:units[1], umPerDbu:umPerDbu} : null,
+    unitsBad: unitsBad,
+    cellCount: cellOrder.length, topCount: topNames.length, fellBack: fellBack,
+    topCells: topCells, unresolved: unresolved,
+    graph: graph, layers: layers, totals: totals, totalElems: totalElems,
+    warnings: warnings, truncated: truncated
+  };
+}
+</script>
+
+<!-- ===================== MAIN-THREAD UI ===================== -->
+<script>
+"use strict";
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var MAX_FILE_BYTES = 500*1024*1024;
+  var STORE = 'https://store.mst-sg.com/services/mpw-tapeout-rfq';
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmt(n,d){ if(n==null||!isFinite(n)) return '–'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:d==null?0:d}); }
+  function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},1800); }
+
+  // worker from inline blob
+  var workerSrc = $('gdsWorker').textContent;
+  var worker = null;
+  function getWorker(){
+    if(worker) return worker;
+    try { worker = new Worker(URL.createObjectURL(new Blob([workerSrc], {type:'application/javascript'}))); }
+    catch(e){ worker=null; }
+    return worker;
+  }
+
+  var lastRfqText = '';
+
+  function showError(msg){ var e=$('err'); e.innerHTML='<b>Could not read file.</b> '+esc(msg); e.classList.add('on'); $('results').classList.remove('on'); $('prog').classList.remove('on'); }
+  function clearError(){ $('err').classList.remove('on'); }
+
+  function handleFile(file){
+    clearError();
+    if(!file) return;
+    if(file.size > MAX_FILE_BYTES){ showError('File is '+(file.size/1048576).toFixed(0)+' MB; the in-browser inspector supports up to 500 MB. Nothing was uploaded.'); return; }
+    $('prog').classList.add('on'); $('progBar').style.width='4%';
+    file.arrayBuffer().then(function(buf){
+      var w = getWorker();
+      if(!w){ showError('Your browser blocked the in-page parser (Web Worker). Please use a current version of Chrome, Firefox, Edge or Safari. Nothing was uploaded.'); return; }
+      w.onmessage = function(ev){
+        var d=ev.data||{};
+        if(d.type==='progress'){ $('progBar').style.width=Math.max(4,Math.round(d.pct*100))+'%'; }
+        else if(d.type==='result'){ $('progBar').style.width='100%'; renderResult(d.result); }
+        else if(d.type==='error'){ showError(d.message||'Parse error.'); }
+      };
+      w.onerror = function(e){ showError((e&&e.message)||'Worker error.'); };
+      try { w.postMessage({buf:buf}, [buf]); } catch(e){ w.postMessage({buf:buf}); }
+    }, function(){ showError('Could not read the file from disk.'); });
+  }
+
+  function renderResult(r){
+    $('prog').classList.remove('on');
+    if(!r || !r.ok){ showError('No result.'); return; }
+    var rep = r.topCells && r.topCells.length ? r.topCells[0] : null;
+
+    // KPIs
+    var dieStr='–';
+    if(rep && rep.widthUm!=null) dieStr = fmt(rep.widthUm,1)+' × '+fmt(rep.heightUm,1)+'<small> µm</small>';
+    else if(rep && rep.bboxDb) dieStr = '<small>units missing</small>';
+    var areaStr = (rep && rep.areaMm2!=null) ? fmt(rep.areaMm2,4)+'<small> mm²</small>' : '–';
+    var cards=[
+      {lab:'Die size', val:dieStr},
+      {lab:'Die area', val:areaStr},
+      {lab:'Cells', val:fmt(r.cellCount)+'<small> · '+fmt(r.topCount)+' top</small>'},
+      {lab:'Layers / elements', val:fmt(r.layers.length)+'<small> / '+fmt(r.totalElems)+'</small>'}
+    ];
+    $('kpis').innerHTML = cards.map(function(c){ return '<div class="kpi"><div class="lab">'+c.lab+'</div><div class="val">'+c.val+'</div></div>'; }).join('');
+
+    // die svg (proportional rectangle)
+    renderDie(rep);
+    $('dieScopePill').textContent = r.topCount>1 ? ('largest of '+r.topCount+' top cells') : (r.fellBack?'fallback (cyclic)':'top cell');
+
+    // die dl
+    var dieDl='';
+    if(rep){
+      dieDl += row('Top cell', esc(rep.name));
+      if(rep.widthUm!=null){ dieDl += row('Width', fmt(rep.widthUm,2)+' µm'); dieDl += row('Height', fmt(rep.heightUm,2)+' µm'); dieDl += row('Area', fmt(rep.areaMm2,4)+' mm²'); }
+      else if(rep.bboxDb){ dieDl += row('Bounding box', fmt(rep.bboxDb.maxX-rep.bboxDb.minX)+' × '+fmt(rep.bboxDb.maxY-rep.bboxDb.minY)+' db-units'); dieDl += row('Die µm', 'unavailable (UNITS missing)'); }
+      else dieDl += row('Geometry', 'empty top cell');
+    } else dieDl = row('Top cell','none');
+    $('dieDl').innerHTML = dieDl;
+
+    // library dl
+    var ud = r.units;
+    var libDl = row('Library', r.libname?esc(r.libname):'(unnamed)')
+      + row('GDS version', r.header!=null?esc(String(r.header)):'–')
+      + row('1 db-unit', ud&&ud.metersPerDbu? fmt(ud.metersPerDbu*1e9,4)+' nm' : (r.unitsBad?'invalid':'–'))
+      + row('User unit', ud&&ud.uuPerDbu? fmt(ud.uuPerDbu,6) : '–');
+    $('libDl').innerHTML = libDl;
+
+    // elements dl
+    var t=r.totals;
+    $('elemDl').innerHTML = row('Boundary', fmt(t.BOUNDARY)) + row('Path', fmt(t.PATH)) + row('Box', fmt(t.BOX))
+      + row('SREF', fmt(t.SREF)) + row('AREF', fmt(t.AREF)) + row('Text', fmt(t.TEXT)) + (t.NODE?row('Node',fmt(t.NODE)):'');
+
+    // layers
+    $('layerPill').textContent = r.layers.length+' pair'+(r.layers.length===1?'':'s');
+    $('layerBody').innerHTML = r.layers.length ? r.layers.map(function(L){ return '<tr><td class="l">'+L[0]+'</td><td class="l">'+L[1]+'</td><td>'+fmt(L[2])+'</td></tr>'; }).join('') : '<tr><td class="l" colspan="3" style="color:var(--faint)">no layered geometry</td></tr>';
+
+    // tree
+    renderTree(r);
+
+    // warnings
+    var wb=$('warnbox');
+    var warns = (r.warnings||[]).slice();
+    if(r.truncated) warns.unshift('Parse stopped early — results are partial (file may be truncated or malformed).');
+    if(r.unresolved && r.unresolved.length) warns.push('Unresolved (external) cell references: '+r.unresolved.slice(0,12).map(esc).join(', ')+(r.unresolved.length>12?' …':''));
+    if(warns.length){ wb.style.display='block'; wb.innerHTML='<b>Notes / warnings ('+warns.length+')</b><ul>'+warns.slice(0,40).map(function(w){return '<li>'+esc(w)+'</li>';}).join('')+'</ul>'; }
+    else wb.style.display='none';
+
+    // RFQ summary + deep-link
+    buildRfq(r, rep);
+
+    $('results').classList.add('on');
+    $('results').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function row(k,v){ return '<dt>'+esc(k)+'</dt><dd>'+v+'</dd>'; }
+
+  function renderDie(rep){
+    var svg=$('dieSvg');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var W=400,H=240,pad=40;
+    var hasUm = rep && rep.widthUm!=null;
+    var w = hasUm?rep.widthUm:(rep&&rep.bboxDb?rep.bboxDb.maxX-rep.bboxDb.minX:0);
+    var h = hasUm?rep.heightUm:(rep&&rep.bboxDb?rep.bboxDb.maxY-rep.bboxDb.minY:0);
+    if(!rep||!(w>0)||!(h>0)){ var tx=mk('text',{x:W/2,y:H/2,'text-anchor':'middle',fill:'var(--faint)','font-family':'var(--mono)','font-size':12}); tx.textContent='no die geometry'; svg.appendChild(tx); return; }
+    var sc=Math.min((W-2*pad)/w,(H-2*pad)/h);
+    var rw=w*sc, rh=h*sc, x=(W-rw)/2, y=(H-rh)/2;
+    svg.appendChild(mk('rect',{x:x,y:y,width:rw,height:rh,fill:'var(--signal-soft)',stroke:'var(--signal)','stroke-width':1.5,rx:2}));
+    // crosshair grid
+    svg.appendChild(mk('line',{x1:x,y1:y+rh+14,x2:x+rw,y2:y+rh+14,stroke:'var(--faint)','stroke-width':1}));
+    var unit = hasUm?' µm':' dbu';
+    var lw=mk('text',{x:x+rw/2,y:y+rh+28,'text-anchor':'middle',fill:'var(--muted)','font-family':'var(--mono)','font-size':11}); lw.textContent=fmt(w,1)+unit; svg.appendChild(lw);
+    var lh=mk('text',{x:x-12,y:y+rh/2,'text-anchor':'middle',fill:'var(--muted)','font-family':'var(--mono)','font-size':11,transform:'rotate(-90 '+(x-12)+' '+(y+rh/2)+')'}); lh.textContent=fmt(h,1)+unit; svg.appendChild(lh);
+  }
+  function mk(tag,attrs){ var e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
+
+  function renderTree(r){
+    var box=$('tree'); box.textContent='';
+    var byName={}; r.graph.forEach(function(c){ byName[c.name]=c; });
+    var MAX_NODES=2500, MAX_DEPTH=9, count=0, capped=false;
+    var frag=document.createDocumentFragment();
+    var roots = (r.topCells||[]).map(function(t){return t.name;});
+    if(!roots.length) roots = r.graph.slice(0,1).map(function(c){return c.name;});
+
+    function line(indent, html){ var div=document.createElement('div'); div.innerHTML='<span class="ind">'+indent+'</span>'+html; return div; }
+
+    function walk(name, prefix, depth, path, instLabel, kindLabel){
+      if(count>=MAX_NODES){ capped=true; return; }
+      count++;
+      var cell=byName[name];
+      var top = depth===0;
+      var label = '<span class="'+(top?'top':'node')+'">'+esc(name)+'</span>';
+      if(instLabel) label += ' <span class="cnt">×'+instLabel+'</span>';
+      if(kindLabel) label += ' <span class="kind">'+kindLabel+'</span>';
+      if(top){ var rep=(r.topCells||[]).filter(function(t){return t.name===name;})[0]; if(rep&&rep.widthUm!=null) label += ' <span class="kind">('+fmt(rep.widthUm,1)+'×'+fmt(rep.heightUm,1)+' µm)</span>'; }
+      if(!cell){ frag.appendChild(line(prefix, label+' <span class="ext">[external]</span>')); return; }
+      if(path[name]){ frag.appendChild(line(prefix, label+' <span class="cyc">↻ cycle</span>')); return; }
+      frag.appendChild(line(prefix, label));
+      if(depth>=MAX_DEPTH){ if(cell.refs.length) frag.appendChild(line(prefix+'   ', '<span class="kind">… deeper ('+cell.refs.length+' refs)</span>')); return; }
+      path[name]=1;
+      for(var i=0;i<cell.refs.length;i++){
+        if(count>=MAX_NODES){ capped=true; break; }
+        var ref=cell.refs[i];
+        var last=(i===cell.refs.length-1);
+        var branch = prefix + (last?'└─ ':'├─ ');
+        var childPrefix = prefix + (last?'   ':'│  ');
+        var kl = ref.kind==='AREF' ? ('AREF '+ref.cols+'×'+ref.rows) : 'SREF';
+        walk(ref.sname, branch, depth+1, path, ref.instances>1?String(ref.instances):'', kl);
+        // restore childPrefix usage
+        void childPrefix;
+      }
+      delete path[name];
+    }
+    for(var i=0;i<roots.length;i++) walk(roots[i], '', 0, {}, '', '');
+    box.appendChild(frag);
+    $('treePill').textContent = r.cellCount+' cells'+(capped?' · view capped':'');
+    if(capped){ var d=document.createElement('div'); d.innerHTML='<span class="kind">… tree truncated for display ('+MAX_NODES+'+ nodes)</span>'; box.appendChild(d); }
+  }
+
+  function buildRfq(r, rep){
+    var lines=[];
+    lines.push('MPW RFQ summary — generated locally from a GDSII file (metadata only, no IP).');
+    lines.push('');
+    if(rep){
+      lines.push('Top cell:        '+rep.name+(r.topCount>1?(' (largest of '+r.topCount+' top cells)'):''));
+      if(rep.widthUm!=null){
+        lines.push('Die size:        '+rep.widthUm.toFixed(1)+' × '+rep.heightUm.toFixed(1)+' µm');
+        lines.push('Die area:        '+rep.areaMm2.toFixed(4)+' mm²');
+      } else lines.push('Die size:        unavailable (UNITS missing/invalid)');
+    }
+    lines.push('Cells:           '+r.cellCount+'  ·  Top cells: '+r.topCount);
+    lines.push('Distinct layers: '+r.layers.length+'  ·  Total elements: '+r.totalElems);
+    if(r.units && r.units.metersPerDbu) lines.push('Library unit:    1 db-unit = '+(r.units.metersPerDbu*1e9).toFixed(4)+' nm');
+    if(r.libname) lines.push('Library name:    '+r.libname);
+    lines.push('');
+    lines.push('No geometry / netlist / GDS shared — high-level RFQ only.');
+    var text=lines.join('\n');
+    lastRfqText=text;
+    $('rfqText').textContent=text;
+
+    // deep-link: bucket-friendly numeric area + notes summary (storefront prefill normalizes both)
+    var q=[];
+    if(rep && rep.areaMm2!=null) q.push('die_area_mm2='+encodeURIComponent(rep.areaMm2.toFixed(3)));
+    q.push('notes='+encodeURIComponent(text));
+    q.push('utm_source=mst_tools'); q.push('utm_medium=tool'); q.push('utm_campaign=mpw_gds');
+    $('rfqLink').href = STORE + '?' + q.join('&');
+  }
+
+  // ---- wiring ----
+  var fileInput=$('file'), drop=$('drop');
+  fileInput.addEventListener('change', function(){ if(fileInput.files&&fileInput.files[0]) handleFile(fileInput.files[0]); });
+  ['dragenter','dragover'].forEach(function(ev){ drop.addEventListener(ev,function(e){ e.preventDefault(); drop.classList.add('drag'); }); });
+  ['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev,function(e){ e.preventDefault(); if(ev==='dragleave' && e.target!==drop) return; drop.classList.remove('drag'); }); });
+  drop.addEventListener('drop', function(e){ var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) handleFile(f); });
+
+  $('copyRfq').addEventListener('click', function(){ var t=lastRfqText; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(function(){toast('Summary copied');},function(){toast('Copy failed');}); } else toast('Copy not supported'); });
+  $('dlRfq').addEventListener('click', function(){ var a=document.createElement('a'); a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(lastRfqText); a.download='mpw-rfq-summary.txt'; a.click(); });
+  $('again').addEventListener('click', function(){ $('results').classList.remove('on'); fileInput.value=''; clearError(); window.scrollTo({top:0,behavior:'smooth'}); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">MST MPW RFQ coordination flow</title>
+  <desc id="desc">A five-step mature-node MPW RFQ coordination flow from outline intake to partner-confirmed indicative quote.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#121823"/>
+      <stop offset="1" stop-color="#0a0d12"/>
+    </linearGradient>
+    <linearGradient id="signal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff6a1f"/>
+      <stop offset="1" stop-color="#ffb36a"/>
+    </linearGradient>
+    <style>
+      .bg{fill:url(#bg)}
+      .grid{stroke:#263244;stroke-width:1;opacity:.7}
+      .card{fill:#151c28;stroke:#2d394d;stroke-width:1.4}
+      .num{font:700 18px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#ff8a3d}
+      .h{font:700 25px Inter,Arial,sans-serif;fill:#f3eadc}
+      .p{font:500 15px Inter,Arial,sans-serif;fill:#a9b3c2}
+      .small{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.4px;fill:#8fd5ff}
+      .line{stroke:url(#signal);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .dot{fill:#ff6a1f}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="420" rx="0"/>
+  <path class="grid" d="M80 70h960M80 140h960M80 210h960M80 280h960M80 350h960M160 40v340M320 40v340M480 40v340M640 40v340M800 40v340M960 40v340"/>
+  <text x="64" y="54" class="small">MATURE-NODE MPW RFQ COORDINATION</text>
+  <text x="64" y="91" class="h">Outline first. Screen before design detail.</text>
+  <g transform="translate(64 132)">
+    <rect class="card" width="190" height="190" rx="10"/>
+    <text x="22" y="38" class="num">01</text>
+    <text x="22" y="76" class="h">Outline</text>
+    <text x="22" y="104" class="p">Node, process,</text>
+    <text x="22" y="126" class="p">die area, quantity,</text>
+    <text x="22" y="148" class="p">timeline.</text>
+  </g>
+  <g transform="translate(272 132)">
+    <rect class="card" width="190" height="190" rx="10"/>
+    <text x="22" y="38" class="num">02</text>
+    <text x="22" y="76" class="h">Screen</text>
+    <text x="22" y="104" class="p">Compliance,</text>
+    <text x="22" y="126" class="p">country, end-use,</text>
+    <text x="22" y="148" class="p">process fit.</text>
+  </g>
+  <g transform="translate(480 132)">
+    <rect class="card" width="190" height="190" rx="10"/>
+    <text x="22" y="38" class="num">03</text>
+    <text x="22" y="76" class="h">NDA / PDK</text>
+    <text x="22" y="104" class="p">Set the safe</text>
+    <text x="22" y="126" class="p">path before any</text>
+    <text x="22" y="148" class="p">design exchange.</text>
+  </g>
+  <g transform="translate(688 132)">
+    <rect class="card" width="190" height="190" rx="10"/>
+    <text x="22" y="38" class="num">04</text>
+    <text x="22" y="76" class="h">Confirm</text>
+    <text x="22" y="104" class="p">Qualified resource</text>
+    <text x="22" y="126" class="p">reviews fit, price,</text>
+    <text x="22" y="148" class="p">schedule.</text>
+  </g>
+  <g transform="translate(896 132)">
+    <rect class="card" width="190" height="190" rx="10"/>
+    <text x="22" y="38" class="num">05</text>
+    <text x="22" y="76" class="h">Quote</text>
+    <text x="22" y="104" class="p">Partner-confirmed</text>
+    <text x="22" y="126" class="p">indicative quote</text>
+    <text x="22" y="148" class="p">and next steps.</text>
+  </g>
+  <path class="line" d="M238 228h34M446 228h34M654 228h34M862 228h34"/>
+  <circle class="dot" cx="254" cy="228" r="4"/>
+  <circle class="dot" cx="462" cy="228" r="4"/>
+  <circle class="dot" cx="670" cy="228" r="4"/>
+  <circle class="dot" cx="878" cy="228" r="4"/>
+  <text x="64" y="374" class="p">No GDS, netlist, RTL, schematic, mask data, or confidential design IP at first intake.</text>
+</svg>

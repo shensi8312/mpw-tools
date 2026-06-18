@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MPW Prototype Estimator — dies per wafer, reticle utilization, indicative cost | MST</title>
+<meta name="description" content="Free open-source MPW prototype estimator: gross dies per wafer, shared-reticle utilization, indicative mature-node cost range, shuttle timing and a tapeout-readiness checklist. By MST Singapore — mature-node MPW & RFQ coordination." />
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className='js';</script>
+<style>
+:root{--ink:#0a0d12;--ink2:#0f141c;--panel:#121922;--line:rgba(236,231,221,.12);--line2:rgba(236,231,221,.22);--bone:#ECE7DD;--dim:#9aa6b6;--faint:#5f6b7a;--signal:#FF6A1F;--soft:rgba(255,106,31,.13);--cool:#7FB7D6;
+--mono:"IBM Plex Mono",monospace;--disp:"Bricolage Grotesque",sans-serif;--body:"Hanken Grotesk",sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.3;-webkit-mask-image:radial-gradient(circle at 50% 0,#000,transparent 75%);mask-image:radial-gradient(circle at 50% 0,#000,transparent 75%)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+.mono{font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;font-size:.7rem}
+.eyebrow{color:var(--signal);display:inline-flex;align-items:center;gap:.6em}.eyebrow::before{content:"";width:24px;height:1px;background:var(--signal)}
+header{border-bottom:1px solid var(--line);padding:18px 0}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:800;font-size:1.05rem}
+.brand .m{width:28px;height:28px;border:1.5px solid var(--signal);display:grid;place-items:center;font-family:var(--mono);font-size:.7rem;color:var(--signal)}
+.brand small{font-family:var(--mono);font-weight:400;font-size:.56rem;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;display:block;line-height:1}
+.brand a.store{margin-left:auto;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);text-decoration:none;border:1px solid var(--line2);padding:8px 13px}
+.hero{padding:46px 0 30px}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.05;letter-spacing:-.02em;margin:16px 0 0}
+h1 .hl{color:var(--signal)}
+.hero p{color:var(--dim);max-width:62ch;margin-top:14px}
+.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px;padding:10px 0 60px;align-items:start}
+.card{border:1px solid var(--line);background:var(--ink2)}
+.card h2{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:15px 20px;border-bottom:1px solid var(--line)}
+.body{padding:18px 20px}
+label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:14px 0 7px}
+label:first-child{margin-top:0}
+select,input{width:100%;background:var(--ink);color:var(--bone);border:1px solid var(--line2);padding:10px 12px;font-family:var(--body);font-size:.95rem}
+select:focus,input:focus{outline:none;border-color:var(--signal)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line2);padding:7px 11px;cursor:pointer;color:var(--dim);user-select:none}
+.chip.on{background:var(--soft);border-color:var(--signal);color:var(--signal)}
+/* outputs */
+.out{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+.metric{padding:18px 20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.metric:nth-child(2n){border-right:0}
+.metric .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.metric .v{font-family:var(--disp);font-weight:700;font-size:1.7rem;line-height:1.1;margin-top:7px}
+.metric .v small{font-size:.9rem;color:var(--dim);font-family:var(--body);font-weight:400}
+.metric.amber .v{color:var(--signal)}
+.metric .sub{color:var(--faint);font-size:.78rem;margin-top:5px}
+.note{font-size:.82rem;color:var(--dim);padding:14px 20px;border-bottom:1px solid var(--line);background:var(--soft)}
+.note b{color:var(--bone)}
+.drivers{padding:16px 20px}
+.drivers .d{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.drivers .d:last-child{border-bottom:0}.drivers .d span:last-child{color:var(--dim);font-family:var(--mono);font-size:.78rem}
+details{border-top:1px solid var(--line)}
+summary{padding:14px 20px;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bone);cursor:pointer}
+details ul{margin:0 20px 16px 38px;color:var(--dim);font-size:.9rem}details li{padding:3px 0}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;border-top:1px solid var(--line);background:linear-gradient(180deg,var(--soft),transparent)}
+.cta .t{font-size:.9rem;color:var(--dim)}.cta .t b{color:var(--bone)}
+.btn{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;padding:12px 18px;border:1px solid var(--signal);background:var(--signal);color:var(--ink);text-decoration:none;white-space:nowrap;display:inline-flex;gap:.5em;align-items:center;cursor:pointer}
+.btn:hover{background:transparent;color:var(--signal)}
+.disc{font-size:.76rem;color:var(--faint);padding:24px 0 60px;max-width:80ch;line-height:1.6}
+.disc b{color:var(--dim)}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--faint);font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--dim);text-decoration:none}footer a:hover{color:var(--signal)}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.out{grid-template-columns:1fr}.metric{border-right:0}}
+</style>
+<link rel="stylesheet" href="/tools/assets/mst-site-header.css">
+</head>
+<body>
+<header id="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="MST Home">
+      <img
+        src="/wp-content/themes/mst-sg-theme-v2/assets/images/logo-header.png"
+        alt="Moore Solution Technology"
+        class="brand-logo"
+        width="44"
+        height="44"
+        loading="eager"
+        decoding="async"
+      >
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="https://store.mst-sg.com/?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=store_entrance&amp;utm_content=nav_store_rfq" target="_blank" rel="noopener">Store / RFQ</a>
+      <a href="/mpw/">MPW</a>
+      <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a>
+      <a href="/tools/">Tools</a>
+      <a href="/solutions/">Design Automation</a>
+      <a href="/news/">News</a>
+    </nav>
+    <div class="lang-switch" aria-label="Language">
+      <a href="/tools/mpw-estimator/?lang=en" lang="en" hreflang="en" class="is-active">EN</a>
+      <span aria-hidden="true">/</span>
+      <a href="/tools/mpw-estimator/?lang=zh" lang="zh" hreflang="zh">中文</a>
+    </div>
+    <div class="nav-actions-redesign">
+      <a class="nav-mail" href="https://qiye.aliyun.com" target="_blank" rel="noopener">Mail</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero"><div class="wrap">
+  <span class="mono eyebrow">Free · Open-source · Mature-node MPW</span>
+  <h1>MPW prototype <span class="hl">estimator</span></h1>
+  <p>Estimate gross dies per wafer, shared-reticle utilization, an indicative mature-node cost range, shuttle timing and tapeout readiness — before you have a finalized GDS. Planning intuition only; real availability and pricing are partner-confirmed.</p>
+</div></section>
+
+<div class="wrap grid">
+  <!-- INPUTS -->
+  <div class="card"><h2>Inputs</h2><div class="body">
+    <label>Wafer diameter</label>
+    <div class="chips" id="wafer">
+      <span class="chip on" data-v="200">200 mm</span><span class="chip" data-v="300">300 mm</span>
+    </div>
+    <label>Target node</label>
+    <select id="node">
+      <option value="350">0.35 µm (350 nm)</option>
+      <option value="180" selected>180 nm</option>
+      <option value="130">130 nm</option>
+      <option value="90">90 nm</option>
+      <option value="65">65 / 55 nm</option>
+      <option value="40">40 nm</option>
+      <option value="28">28 / 22 nm (case-by-case)</option>
+    </select>
+    <label>Process family</label>
+    <select id="proc">
+      <option value="analog_mixed_signal">Analog / Mixed-signal</option>
+      <option value="bcd_power">BCD / Power management</option>
+      <option value="envm_eflash">eNVM / eFlash</option>
+      <option value="rf">RF</option>
+      <option value="high_voltage">High-voltage</option>
+      <option value="logic">Logic</option>
+      <option value="mems">MEMS</option>
+    </select>
+    <div class="row2">
+      <div><label>Die width (mm)</label><input id="w" type="number" value="2" min="0.1" step="0.1"></div>
+      <div><label>Die height (mm)</label><input id="h" type="number" value="2" min="0.1" step="0.1"></div>
+    </div>
+    <div class="row2">
+      <div><label>Scribe (mm)</label><input id="scribe" type="number" value="0.1" min="0" step="0.01"></div>
+      <div><label>Edge exclusion (mm)</label><input id="edge" type="number" value="3" min="0" step="0.5"></div>
+    </div>
+    <label>Prototype samples (packaged)</label>
+    <select id="samples"><option value="lt_25">&lt; 25</option><option value="25_100" selected>25 – 100</option><option value="gt_100">&gt; 100</option></select>
+  </div></div>
+
+  <!-- OUTPUTS -->
+  <div class="card">
+    <h2>Estimate</h2>
+    <div class="out">
+      <div class="metric"><div class="k">Die area</div><div class="v" id="o_area">—</div><div class="sub" id="o_areasub"></div></div>
+      <div class="metric"><div class="k">Gross dies / wafer</div><div class="v" id="o_dpw">—</div><div class="sub">incl. edge exclusion + scribe</div></div>
+      <div class="metric"><div class="k">Shared-reticle share</div><div class="v" id="o_ret">—</div><div class="sub">of a typical multi-project reticle field</div></div>
+      <div class="metric amber"><div class="k">Indicative cost range</div><div class="v" id="o_cost">—</div><div class="sub">public-reference · partner-confirmed</div></div>
+    </div>
+    <div class="note" id="o_sched">—</div>
+    <div class="drivers" id="o_drivers"></div>
+    <details><summary>Tapeout readiness checklist</summary>
+      <ul>
+        <li>Node + process family confirmed (PDK access path identified)</li>
+        <li>NDA path agreed before any confidential design data is exchanged</li>
+        <li>Die area + I/O ring + seal ring + scribe rules respected</li>
+        <li>DRC / LVS clean against the chosen PDK before submission freeze</li>
+        <li>Package + wafer-probe / packaged-test scope decided</li>
+        <li>Shuttle submission-freeze date confirmed (no GDS changes after)</li>
+        <li>Customer / country / end-use screened (export compliance)</li>
+      </ul>
+    </details>
+    <div class="cta">
+      <div class="t"><b>Turn this into a real quote.</b> Send a high-level RFQ — no GDS needed. Availability, price &amp; schedule are partner-confirmed after review.</div>
+      <a class="btn" id="rfq" href="https://store.mst-sg.com/services/mpw-tapeout-rfq" target="_blank" rel="noopener">Submit MPW RFQ →</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap disc">
+  <b>How this is calculated.</b> Gross die per wafer uses the standard wafer-area / die-area model with edge exclusion and scribe: DPW ≈ π·(R²)/S − π·D/√(2S), where D is the usable diameter (wafer Ø − 2× edge exclusion), R = D/2, and S is the die area including scribe. Real net yield is lower (defects, partial dies, test). Shared-reticle share assumes a typical multi-project reticle field; actual reticle floorplan and cost-share are set by the partner. The indicative cost range is a coarse public-reference band for planning intuition only — it is <b>not a quote</b>, names no foundry, and varies widely by partner, mask set, options, package and test. Real pricing, availability, PDK access and schedule are confirmed case-by-case after review. MST is an MPW aggregation / RFQ coordination partner, not a wafer foundry.
+</div>
+
+<footer class="wrap">
+  <span>© Moore Solution Technology · Singapore · MIT-licensed open-source tool</span>
+  <span><a href="https://mst-sg.com/mpw/">MPW hub</a> · <a href="https://store.mst-sg.com/services/mpw-tapeout-rfq">Submit RFQ</a> · <a href="#" id="ghlink">GitHub</a></span>
+</footer>
+
+<script>
+// --- node cost factor (coarse, public-reference relative band; NOT a quote) ---
+var NODE = {
+  '350':{label:'0.35µm',f:0.7,sched:'12–16 weeks · submission freeze ~2–4 wks before fab start'},
+  '180':{label:'180nm',f:1.0,sched:'12–16 weeks · submission freeze ~2–4 wks before fab start'},
+  '130':{label:'130nm',f:1.2,sched:'12–18 weeks'},
+  '90':{label:'90nm',f:1.6,sched:'14–18 weeks'},
+  '65':{label:'65/55nm',f:4.6,sched:'14–20 weeks'},
+  '40':{label:'40nm',f:5.5,sched:'16–22 weeks'},
+  '28':{label:'28/22nm',f:11.0,sched:'case-by-case · partner + compliance review first'}
+};
+// process-family premium (specialty processes carry a premium vs vanilla CMOS)
+var PROC={analog_mixed_signal:1.0,bcd_power:1.2,envm_eflash:1.15,rf:1.1,high_voltage:1.2,logic:1.0,mems:1.25};
+// indicative $/mm² band, calibrated to public university-shuttle reference pricing
+// (≈180nm $1.0–1.5k/mm² · 65nm ≈$5.8k · 28nm ≈$13.8k). Coarse & indicative only — partner-confirmed in an RFQ.
+var BASE_LO=900, BASE_HI=1500;
+var STORE='https://store.mst-sg.com/services/mpw-tapeout-rfq';
+function areaBucket(a){return a<5?'lt_5':a<20?'5_20':a<50?'20_50':'gt_50';}
+function nodeStoreVal(n){return {'350':'350nm','180':'180nm','130':'130nm','90':'90nm','65':'65_55nm','40':'40nm','28':'28_22nm'}[n];}
+function fmt(n){return n>=1000?Math.round(n).toLocaleString():n.toFixed(n<10?2:0);}
+function money(n){return '$'+Math.round(n).toLocaleString();}
+var waferSel=200;
+document.querySelectorAll('#wafer .chip').forEach(function(c){c.onclick=function(){document.querySelectorAll('#wafer .chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');waferSel=+c.dataset.v;calc();};});
+['node','proc','w','h','scribe','edge','samples'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);});
+function calc(){
+  var node=document.getElementById('node').value, proc=document.getElementById('proc').value;
+  var w=+document.getElementById('w').value||0, h=+document.getElementById('h').value||0;
+  var scribe=+document.getElementById('scribe').value||0, edge=+document.getElementById('edge').value||0;
+  var samples=document.getElementById('samples').value;
+  var area=w*h;
+  var S=(w+scribe)*(h+scribe);              // pitch area incl scribe
+  var D=Math.max(0, waferSel-2*edge), R=D/2;
+  var dpw = S>0 ? Math.max(0, Math.floor((Math.PI*R*R)/S - (Math.PI*D)/Math.sqrt(2*S))) : 0;
+  // shared reticle: typical reticle field ~ 22mm x 22mm at advanced; for mature use ~ 20x20 usable field intuition
+  var reticleField = node==='28'||node==='40' ? 26*33 : 22*22;
+  var share = Math.min(100, (S/reticleField)*100);
+  var nf=NODE[node];
+  var pf=PROC[proc]||1.0;
+  var lo=BASE_LO*nf.f*pf*area, hi=BASE_HI*nf.f*pf*area;
+  document.getElementById('o_area').innerHTML=fmt(area)+' <small>mm²</small>';
+  document.getElementById('o_areasub').textContent=w+' × '+h+' mm';
+  document.getElementById('o_dpw').textContent=fmt(dpw);
+  document.getElementById('o_ret').innerHTML=share.toFixed(share<10?1:0)+' <small>%</small>';
+  document.getElementById('o_cost').textContent=money(lo)+' – '+money(hi);
+  document.getElementById('o_sched').innerHTML='<b>'+nf.label+' '+document.getElementById('proc').selectedOptions[0].text+'</b> · indicative shuttle: '+nf.sched;
+  document.getElementById('o_drivers').innerHTML=[
+    ['Mask / NRE share (shared MPW)','dominant for small dies'],
+    ['Die area',''+fmt(area)+' mm² → scales cost linearly'],
+    ['Node',''+nf.label+' (×'+nf.f+' vs 180nm)'],
+    ['Packaging + test','quoted separately'],
+    ['Extra wafers / samples','beyond shuttle minimum']
+  ].map(function(d){return '<div class="d"><span>'+d[0]+'</span><span>'+d[1]+'</span></div>';}).join('');
+  // store deep-link with prefilled params (store form to read these)
+  var q='?process_node='+nodeStoreVal(node)+'&design_type='+proc+'&die_area_mm2='+areaBucket(area)+'&sample_count='+samples+'&utm_source=mpw-estimator&utm_medium=tool&utm_campaign=mpw_estimator';
+  document.getElementById('rfq').href=STORE+q;
+}
+calc();
+</script>
+</body>
+</html>

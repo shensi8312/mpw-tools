@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-label="Industrial RFQ sourcing visual">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101720"/>
+      <stop offset="1" stop-color="#070a0f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff7a35"/>
+      <stop offset="1" stop-color="#ffd0a8"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="600" fill="url(#bg)"/>
+  <path d="M0 120h960M0 240h960M0 360h960M0 480h960M160 0v600M320 0v600M480 0v600M640 0v600M800 0v600" stroke="#263241" stroke-width="1" opacity=".55"/>
+  <rect x="86" y="84" width="792" height="432" rx="18" fill="#111923" stroke="#2d3a48" stroke-width="2"/>
+  <text x="116" y="136" fill="#8fa0b4" font-family="Menlo, Consolas, monospace" font-size="22" letter-spacing="4">INDUSTRIAL RFQ</text>
+  <rect x="116" y="180" width="250" height="96" rx="12" fill="#151f2a" stroke="#2d3a48"/>
+  <rect x="414" y="180" width="330" height="96" rx="12" fill="#151f2a" stroke="#2d3a48"/>
+  <rect x="116" y="322" width="212" height="88" rx="12" fill="#151f2a" stroke="#2d3a48"/>
+  <rect x="370" y="322" width="212" height="88" rx="12" fill="#151f2a" stroke="#2d3a48"/>
+  <rect x="624" y="322" width="212" height="88" rx="12" fill="#151f2a" stroke="#2d3a48"/>
+  <path d="M366 228h48M744 228h36M328 366h42M582 366h42" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="116" cy="462" r="8" fill="#ff7a35"/>
+  <path d="M146 462h690" stroke="url(#accent)" stroke-width="6" stroke-linecap="round"/>
+  <text x="140" y="234" fill="#ece7dd" font-family="Arial, sans-serif" font-size="30" font-weight="700">BOM</text>
+  <text x="438" y="234" fill="#ece7dd" font-family="Arial, sans-serif" font-size="30" font-weight="700">Drawing</text>
+  <text x="142" y="374" fill="#ece7dd" font-family="Arial, sans-serif" font-size="24" font-weight="700">Screen</text>
+  <text x="396" y="374" fill="#ece7dd" font-family="Arial, sans-serif" font-size="24" font-weight="700">Source</text>
+  <text x="650" y="374" fill="#ece7dd" font-family="Arial, sans-serif" font-size="24" font-weight="700">Ship</text>
+</svg>

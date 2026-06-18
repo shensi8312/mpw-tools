@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MPW Reticle &amp; Wafer Planner — free shared-reticle floorplan, yield &amp; cost-share tool | MST</title>
+<meta name="description" content="Free, open-source MPW planner: pack multiple projects into a shared reticle, step it across the wafer, estimate gross/good dies with a defect-density yield model, and split the cost by area share. Runs 100% in your browser — no signup, no GDS.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://mst-sg.com/tools/mpw-planner/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MPW Reticle &amp; Wafer Planner — free shared-reticle floorplan, yield &amp; cost-share tool">
+<meta property="og:description" content="Pack multiple projects into a shared reticle, step across the wafer, estimate good dies and split cost by area share. 100% in-browser, open-source.">
+<meta property="og:url" content="https://mst-sg.com/tools/mpw-planner/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className='js';</script>
+<style>
+:root{
+  --ink:#0a0d12; --ink2:#11151c; --panel:#141923; --panel2:#1a212d;
+  --bone:#ECE7DD; --muted:#9aa4b2; --faint:#5c6675;
+  --signal:#FF6A1F; --signal-soft:rgba(255,106,31,.14);
+  --cool:#7FB7D6; --line:rgba(236,231,221,.12); --line2:rgba(236,231,221,.07);
+  --ok:#6fcf97; --warn:#f2c14e; --bad:#e06b6b;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Hanken Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--body);
+  font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(var(--line2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line2) 1px,transparent 1px);
+  background-size:48px 48px;
+  background-position:center top;
+}
+a{color:var(--cool);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--signal)}
+.mono{font-family:var(--mono)}
+
+/* header */
+header.site{border-bottom:1px solid var(--line);background:rgba(10,13,18,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:800;letter-spacing:-.01em;font-size:18px}
+.brand b{color:var(--signal)}
+.navlinks{display:flex;gap:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;flex-wrap:wrap}
+.navlinks a{color:var(--muted)}
+.navlinks a:hover{color:var(--bone);text-decoration:none}
+
+/* hero */
+.hero{padding:46px 0 26px}
+.hero h1{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1.04;font-size:clamp(30px,5vw,52px);margin:.35em 0 .2em;color:var(--bone)}
+.hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:60ch;margin:0}
+.hero .tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--panel)}
+
+/* layout */
+.app{display:grid;grid-template-columns:380px minmax(0,1fr);gap:24px;padding:8px 0 60px;align-items:start}
+.app>*{min-width:0}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+
+.panel{background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line);border-radius:14px;padding:20px}
+.panel.sticky{position:sticky;top:74px}
+@media(max-width:900px){.panel.sticky{position:static}}
+.panel h2{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:.02em;margin:0 0 4px;color:var(--bone)}
+.panel h2 .num{color:var(--signal);font-family:var(--mono);font-size:12px;margin-right:8px}
+.panel .sub{color:var(--faint);font-size:12.5px;font-family:var(--mono);margin:0 0 14px}
+
+.fieldset{border:0;margin:0 0 18px;padding:0}
+.fieldset > legend{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--signal);padding:0;margin-bottom:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.row.one{grid-template-columns:1fr}
+label.f{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;font-family:var(--mono);letter-spacing:.02em}
+input,select{
+  width:100%;background:var(--ink);color:var(--bone);border:1px solid var(--line);
+  border-radius:8px;padding:9px 10px;font-family:var(--mono);font-size:14px;
+}
+input:focus,select:focus{outline:none;border-color:var(--signal);box-shadow:0 0 0 3px var(--signal-soft)}
+input[type=number]{appearance:textfield}
+.hint{font-size:11px;color:var(--faint);margin-top:4px;font-family:var(--mono)}
+
+/* projects */
+.proj{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--ink)}
+.proj .phead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.swatch{width:14px;height:14px;border-radius:4px;flex:0 0 auto;border:1px solid rgba(0,0,0,.3)}
+.proj .pname{flex:1}
+.proj .pname input{padding:6px 8px;font-size:13px}
+.iconbtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:7px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1;flex:0 0 auto}
+.iconbtn:hover{color:var(--bad);border-color:var(--bad)}
+.addbtn{width:100%;background:var(--panel2);border:1px dashed var(--line);color:var(--bone);border-radius:9px;padding:10px;font-family:var(--mono);font-size:13px;cursor:pointer;letter-spacing:.04em}
+.addbtn:hover{border-color:var(--signal);color:var(--signal)}
+
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:.04em;border-radius:9px;padding:10px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--bone)}
+.btn:hover{border-color:var(--cool)}
+.btn.sm{padding:7px 11px;font-size:12px}
+
+/* results */
+.results{display:flex;flex-direction:column;gap:22px;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:680px){.wrap{padding:0 18px}.panel{padding:16px}.cards{grid-template-columns:1fr}.tag{white-space:normal}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.kpi .val{font-family:var(--disp);font-weight:800;font-size:clamp(22px,3vw,30px);line-height:1.1;margin-top:6px;color:var(--bone)}
+.kpi .val small{font-size:13px;color:var(--muted);font-weight:500;font-family:var(--body)}
+
+.viz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media(max-width:680px){.viz{grid-template-columns:1fr}}
+.vizbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.vizbox h3{font-family:var(--disp);font-weight:700;font-size:14px;margin:0 0 2px}
+.vizbox .cap{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin:0 0 12px}
+.vizbox svg{width:100%;height:auto;display:block;background:var(--ink);border-radius:8px;border:1px solid var(--line2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+.tablebox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 4px;overflow-x:auto;max-width:100%;min-width:0}
+th,td{text-align:right;padding:10px 12px;border-bottom:1px solid var(--line2);font-family:var(--mono);white-space:nowrap}
+th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:500}
+td.name,th.name{text-align:left;font-family:var(--body);color:var(--bone)}
+tr:last-child td{border-bottom:0}
+tfoot td{color:var(--bone);font-weight:600;border-top:1px solid var(--line)}
+.dot{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:7px;vertical-align:middle}
+
+.note{background:var(--signal-soft);border:1px solid rgba(255,106,31,.3);border-radius:12px;padding:16px 18px;font-size:14px}
+.note b{color:var(--signal)}
+.warnbox{border-color:rgba(242,193,78,.4);background:rgba(242,193,78,.1)}
+.warnbox b{color:var(--warn)}
+
+.cta{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(110deg,var(--panel2),var(--ink2));border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.cta .t{max-width:54ch;min-width:0}
+.cta .t b{font-family:var(--disp);font-size:17px;color:var(--bone);display:block;margin-bottom:4px}
+.cta .t span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.cta a.go{background:var(--signal);color:#1a0d05;font-family:var(--mono);font-weight:600;letter-spacing:.03em;border-radius:10px;padding:13px 20px;white-space:nowrap;max-width:100%}
+.cta a.go:hover{text-decoration:none;filter:brightness(1.08)}
+@media(max-width:680px){.cta a.go{white-space:normal;text-align:center}}
+
+details.how{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 18px}
+details.how summary{cursor:pointer;font-family:var(--disp);font-weight:700;font-size:15px;padding:14px 0;list-style:none}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:'+ ';color:var(--signal);font-family:var(--mono)}
+details.how[open] summary::before{content:'– '}
+details.how .body{padding:0 0 16px;color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+details.how code{font-family:var(--mono);background:var(--ink);padding:2px 6px;border-radius:5px;color:var(--cool);font-size:13px}
+details.how h4{color:var(--bone);font-family:var(--disp);font-size:13.5px;margin:16px 0 6px}
+
+footer.site{border-top:1px solid var(--line);margin-top:40px;padding:26px 0;color:var(--faint);font-family:var(--mono);font-size:12px}
+footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--bone);color:var(--ink);font-family:var(--mono);font-size:13px;padding:11px 18px;border-radius:10px;transition:transform .25s ease,visibility .25s;z-index:50;visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+.nojs{display:none}
+html:not(.js) .nojs{display:block;padding:40px 0;color:var(--warn)}
+html:not(.js) .app{display:none}
+</style>
+<link rel="stylesheet" href="/tools/assets/mst-site-header.css">
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="MST Home">
+      <img
+        src="/wp-content/themes/mst-sg-theme-v2/assets/images/logo-header.png"
+        alt="Moore Solution Technology"
+        class="brand-logo"
+        width="44"
+        height="44"
+        loading="eager"
+        decoding="async"
+      >
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="https://store.mst-sg.com/?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=store_entrance&amp;utm_content=nav_store_rfq" target="_blank" rel="noopener">Store / RFQ</a>
+      <a href="/mpw/">MPW</a>
+      <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a>
+      <a href="/tools/">Tools</a>
+      <a href="/solutions/">Design Automation</a>
+      <a href="/news/">News</a>
+    </nav>
+    <div class="lang-switch" aria-label="Language">
+      <a href="/tools/mpw-planner/?lang=en" lang="en" hreflang="en" class="is-active">EN</a>
+      <span aria-hidden="true">/</span>
+      <a href="/tools/mpw-planner/?lang=zh" lang="zh" hreflang="zh">中文</a>
+    </div>
+    <div class="nav-actions-redesign">
+      <a class="nav-mail" href="https://qiye.aliyun.com" target="_blank" rel="noopener">Mail</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap nojs">JavaScript is required for the interactive planner. The math and formulas are documented at the bottom of this page.</div>
+
+<section class="wrap hero">
+  <div class="eyebrow">Free · open-source · runs 100% in your browser</div>
+  <h1>MPW Reticle &amp; Wafer Planner</h1>
+  <p class="lede">Pack several projects into one shared reticle, step it across the wafer, and estimate gross dies, <em>good</em> dies (defect-density yield), and each project's area-based cost share — the way a real multi-project wafer is actually budgeted. No signup. No GDS. Nothing leaves this page.</p>
+  <div class="tags">
+    <span class="tag">Shared-reticle floorplan</span>
+    <span class="tag">Wafer step-and-repeat map</span>
+    <span class="tag">Defect-density yield</span>
+    <span class="tag">Per-project cost share</span>
+  </div>
+</section>
+
+<main class="wrap app">
+  <!-- ============ INPUTS ============ -->
+  <form class="panel sticky" id="inputs" autocomplete="off" onsubmit="return false">
+    <h2><span class="num">01</span>Run setup</h2>
+    <p class="sub">Wafer · reticle field · yield model</p>
+
+    <fieldset class="fieldset">
+      <legend>Wafer</legend>
+      <div class="row">
+        <div>
+          <label class="f" for="waferD">Diameter</label>
+          <select id="waferD"><option value="200">200 mm (8")</option><option value="300">300 mm (12")</option><option value="150">150 mm (6")</option></select>
+        </div>
+        <div>
+          <label class="f" for="edge">Edge exclusion (mm)</label>
+          <input id="edge" type="number" min="0" max="10" step="0.5" value="3">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend>Reticle field (shared)</legend>
+      <div class="row">
+        <div><label class="f" for="fieldW">Field W (mm)</label><input id="fieldW" type="number" min="2" max="40" step="0.5" value="22"></div>
+        <div><label class="f" for="fieldH">Field H (mm)</label><input id="fieldH" type="number" min="2" max="40" step="0.5" value="22"></div>
+      </div>
+      <div class="row">
+        <div><label class="f" for="scribe">Scribe / street (mm)</label><input id="scribe" type="number" min="0" max="1" step="0.01" value="0.1"></div>
+        <div><label class="f" for="node">Process node</label>
+          <select id="node">
+            <option value="350">0.35 µm</option><option value="180" selected>180 nm</option>
+            <option value="130">130 nm</option><option value="90">90 nm</option>
+            <option value="65">65 / 55 nm</option><option value="40">40 nm</option>
+            <option value="28">28 / 22 nm</option>
+          </select>
+        </div>
+      </div>
+      <div class="hint">Typical stepper max field ≈ 26 × 33 mm. MPW shares this budget across projects.</div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend>Yield (random-defect-limited)</legend>
+      <div class="row">
+        <div><label class="f" for="d0">Defect density D₀ (/cm²)</label><input id="d0" type="number" min="0" max="20" step="0.05" value="0.5" list="d0p"><datalist id="d0p"><option value="0.2"><option value="0.5"><option value="1.0"><option value="2.0"></datalist></div>
+        <div><label class="f" for="model">Yield model</label>
+          <select id="model"><option value="murphy" selected>Murphy</option><option value="poisson">Poisson</option><option value="seeds">Seeds</option><option value="negbin">Neg-binomial (clustered)</option></select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label class="f" for="alpha">Cluster α (neg-bin)</label><input id="alpha" type="number" min="0.2" max="20" step="0.1" value="2"></div>
+        <div><label class="f" for="y0">Systematic yield Y₀</label><input id="y0" type="number" min="0.1" max="1" step="0.01" value="0.9"></div>
+      </div>
+      <div class="hint">D₀ ≈ 0.2–1 is typical for a stable mature node. Y₀ folds in non-random (systematic) loss.</div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend>Projects in the shared reticle</legend>
+      <div id="projs"></div>
+      <button type="button" class="addbtn" id="addProj">+ add project</button>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend>Target</legend>
+      <div class="row one">
+        <div><label class="f" for="target">Good samples wanted (per project)</label><input id="target" type="number" min="1" max="100000" step="1" value="40"></div>
+      </div>
+    </fieldset>
+
+    <div class="btnrow">
+      <button type="button" class="btn" id="shareBtn">Copy share link</button>
+      <button type="button" class="btn" id="jsonBtn">Copy JSON</button>
+      <button type="button" class="btn sm" id="resetBtn">Reset</button>
+    </div>
+  </form>
+
+  <!-- ============ RESULTS ============ -->
+  <section class="results">
+    <div class="cards" id="kpis"></div>
+
+    <div class="viz">
+      <div class="vizbox">
+        <h3>Shared reticle floorplan</h3>
+        <p class="cap" id="reticleCap">heuristic shelf packing</p>
+        <div id="reticleSvg"></div>
+        <div class="legend" id="reticleLegend"></div>
+        <div class="btnrow"><button type="button" class="btn sm" data-dl="reticleSvg" data-name="mpw-reticle">Download PNG</button></div>
+      </div>
+      <div class="vizbox">
+        <h3>Wafer step-and-repeat</h3>
+        <p class="cap" id="waferCap"></p>
+        <div id="waferSvg"></div>
+        <div class="legend"><span><i style="background:var(--signal)"></i> full reticle field</span><span><i style="background:transparent;border:1px dashed var(--cool)"></i> edge exclusion</span></div>
+        <div class="btnrow"><button type="button" class="btn sm" data-dl="waferSvg" data-name="mpw-wafer">Download PNG</button></div>
+      </div>
+    </div>
+
+    <div id="fitWarn"></div>
+
+    <div class="tablebox">
+      <table id="ptable">
+        <thead><tr>
+          <th class="name">Project</th>
+          <th>Die (mm)</th><th>Area mm²</th><th>×reticle</th>
+          <th>Reticle share</th><th>Gross/wafer</th><th>Yield</th>
+          <th>Good/wafer</th><th>Wafers→target</th>
+          <th>Indicative cost</th><th>$/good die</th>
+        </tr></thead>
+        <tbody id="ptbody"></tbody>
+        <tfoot id="ptfoot"></tfoot>
+      </table>
+    </div>
+
+    <div class="note" id="costNote"></div>
+
+    <div class="cta">
+      <div class="t">
+        <b>Turn this into a partner-confirmed quote</b>
+        <span>The numbers above are indicative. Send a high-level RFQ — node, process family, die size, sample count — and we'll route it to a partner-confirmed price &amp; schedule. <strong>No GDS, no netlist needed at this stage.</strong></span>
+      </div>
+      <a class="go" id="rfqLink" href="https://store.mst-sg.com/services/mpw-tapeout-rfq">Start MPW RFQ →</a>
+    </div>
+
+    <details class="how">
+      <summary>How the math works (and what it ignores)</summary>
+      <div class="body">
+        <h4>Reticle packing</h4>
+        Each project places <code>×reticle</code> copies of its die into the shared field. Dies are arranged with a first-fit decreasing-height <em>shelf</em> heuristic (each die padded by the scribe width). Utilisation = Σ(die area)/field area. The shelf packer is a fast approximation, <em>not</em> an optimal 2D bin-pack — real reticle floorplans are hand-tuned, so treat the layout as illustrative.
+
+        <h4>Wafer step-and-repeat</h4>
+        The whole reticle field is stepped across the wafer on a <code>(fieldW × fieldH)</code> pitch. A field counts only if all four corners fall inside the usable radius <code>r = wafer⌀/2 − edge&nbsp;exclusion</code>. We try four half-pitch grid phases and keep the densest — mimicking how a stepper grid is centred. Gross dies for a project = (copies in reticle) × (fields per wafer).
+
+        <h4>Yield (random-defect-limited)</h4>
+        Per-project die area <code>A</code> (cm²) and defect density <code>D₀</code> give the random-defect yield, then multiplied by a systematic factor <code>Y₀</code>:
+        <br>· Poisson: <code>Y = e^(−A·D₀)</code>
+        <br>· Murphy: <code>Y = ((1−e^(−A·D₀))/(A·D₀))²</code>
+        <br>· Seeds: <code>Y = e^(−√(A·D₀))</code>
+        <br>· Neg-binomial (clustered): <code>Y = (1 + A·D₀/α)^(−α)</code>
+        <br>This captures only random-defect loss × a flat systematic factor. It excludes parametric yield, edge-die effects beyond the corner test, test/assembly loss, and reticle-stitching. Bigger dies yield worse — that's real and intentional.
+
+        <h4>Indicative cost</h4>
+        Cost = price/mm² × node-factor × process-factor × (die area × copies), floored at a 1 mm² minimum block. The price band is calibrated to <em>public</em> university-shuttle reference pricing (≈180 nm $1.0–1.5k/mm² · 65 nm ≈ $5.8k · 28 nm ≈ $13.8k) and is a coarse planning figure only — a real MPW quote depends on the foundry, shuttle calendar, mask grade, wafer count and packaging. Cost share = your block area ÷ total occupied reticle area.
+
+        <h4>Privacy &amp; licence</h4>
+        Everything runs client-side. No inputs are uploaded or stored server-side; the "share link" only encodes your numbers in the URL. Open-source (MIT) — fork it, embed it, check the formulas.
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>MST · mature-node MPW RFQ coordination · Singapore · we are not a foundry, and we don't take GDS at intake</span>
+    <span>Open-source · MIT · indicative only</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var PALETTE = ['#FF6A1F','#7FB7D6','#6fcf97','#f2c14e','#c792ea','#e06b6b','#56c2c2','#d49a6a'];
+
+  // ---- cost model (calibrated to public university-shuttle reference pricing) ----
+  var NODE = {'350':0.7,'180':1.0,'130':1.2,'90':1.6,'65':4.6,'40':5.5,'28':11.0};
+  var PROC = {analog_mixed_signal:1.0,bcd_power:1.2,envm_eflash:1.15,rf:1.1,high_voltage:1.2,logic:1.0,mems:1.25};
+  var PROC_LABEL = {analog_mixed_signal:'Analog / mixed-signal',bcd_power:'BCD / power',envm_eflash:'eNVM / eFlash',rf:'RF',high_voltage:'High-voltage',logic:'Digital / logic',mems:'MEMS'};
+  var BASE_LO = 900, BASE_HI = 1500; // $/mm² at 180nm baseline (×node×proc)
+  var MIN_BLOCK = 1.0; // mm² minimum billable block
+
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmt(n,d){ if(!isFinite(n)) return '–'; return Number(n).toLocaleString('en-US',{maximumFractionDigits:d===undefined?0:d,minimumFractionDigits:0}); }
+  function svgEl(tag,attrs){ var e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(var k in attrs){ e.setAttribute(k,attrs[k]); } return e; }
+
+  // ---- default projects ----
+  var DEFAULT_PROJECTS = [
+    {name:'Project A — analog',w:2.5,h:2.5,copies:4,proc:'analog_mixed_signal'},
+    {name:'Project B — BCD/power',w:3,h:4,copies:2,proc:'bcd_power'}
+  ];
+
+  function procOptions(sel){
+    var s=''; for(var k in PROC_LABEL){ s+='<option value="'+k+'"'+(k===sel?' selected':'')+'>'+PROC_LABEL[k]+'</option>'; } return s;
+  }
+
+  function renderProjectRows(list){
+    var box=$('projs'); box.innerHTML='';
+    list.forEach(function(p,i){
+      var color=PALETTE[i%PALETTE.length];
+      var d=document.createElement('div'); d.className='proj';
+      d.innerHTML =
+        '<div class="phead"><span class="swatch" style="background:'+color+'"></span>'+
+        '<span class="pname"><input type="text" maxlength="40" value="'+esc(p.name)+'" data-k="name" data-i="'+i+'"></span>'+
+        '<button type="button" class="iconbtn" data-rm="'+i+'" title="remove">×</button></div>'+
+        '<div class="row"><div><label class="f">Die W (mm)</label><input type="number" min="0.1" max="40" step="0.1" value="'+p.w+'" data-k="w" data-i="'+i+'"></div>'+
+        '<div><label class="f">Die H (mm)</label><input type="number" min="0.1" max="40" step="0.1" value="'+p.h+'" data-k="h" data-i="'+i+'"></div></div>'+
+        '<div class="row"><div><label class="f">Copies ×reticle</label><input type="number" min="1" max="200" step="1" value="'+p.copies+'" data-k="copies" data-i="'+i+'"></div>'+
+        '<div><label class="f">Process</label><select data-k="proc" data-i="'+i+'">'+procOptions(p.proc)+'</select></div></div>';
+      box.appendChild(d);
+    });
+  }
+
+  function readState(){
+    var list=[];
+    document.querySelectorAll('#projs .proj').forEach(function(row){
+      var get=function(k){ return row.querySelector('[data-k="'+k+'"]'); };
+      list.push({
+        name: get('name').value || 'Project',
+        w: Math.max(0.1, parseFloat(get('w').value)||0.1),
+        h: Math.max(0.1, parseFloat(get('h').value)||0.1),
+        copies: Math.max(1, Math.round(parseFloat(get('copies').value)||1)),
+        proc: get('proc').value
+      });
+    });
+    return {
+      waferD:+$('waferD').value, edge:+$('edge').value,
+      fieldW:+$('fieldW').value, fieldH:+$('fieldH').value, scribe:+$('scribe').value,
+      node:$('node').value, d0:+$('d0').value, model:$('model').value, alpha:+$('alpha').value, y0:+$('y0').value,
+      target:Math.max(1,Math.round(+$('target').value)||1),
+      projects:list
+    };
+  }
+
+  // ---- yield ----
+  function yieldFrac(model,A_cm2,D0,alpha){
+    var AD=A_cm2*D0; if(AD<=0) return 1;
+    if(model==='poisson') return Math.exp(-AD);
+    if(model==='seeds')   return Math.exp(-Math.sqrt(AD));
+    if(model==='negbin')  return Math.pow(1+AD/Math.max(0.2,alpha),-Math.max(0.2,alpha));
+    var t=(1-Math.exp(-AD))/AD; return t*t; // murphy
+  }
+
+  // ---- reticle shelf packing ----
+  function packReticle(projects,fieldW,fieldH,scribe){
+    var items=[];
+    projects.forEach(function(p,pi){ for(var k=0;k<p.copies;k++) items.push({w:p.w,h:p.h,pi:pi}); });
+    items.sort(function(a,b){ return b.h-a.h; });
+    var x=0,y=0,rowH=0,placed=[],fits=true,maxX=0;
+    items.forEach(function(it){
+      var cw=it.w+scribe, ch=it.h+scribe;
+      if(x+cw>fieldW+1e-9){ x=0; y+=rowH; rowH=0; }
+      var over=(y+ch>fieldH+1e-9);
+      if(over) fits=false;
+      placed.push({x:x,y:y,w:it.w,h:it.h,pi:it.pi,over:over});
+      x+=cw; if(x>maxX)maxX=x; if(ch>rowH)rowH=ch;
+    });
+    return {placed:placed,fits:fits,usedW:maxX,usedH:y+rowH};
+  }
+
+  // ---- wafer field grid count ----
+  function fieldsPerWafer(waferD,edge,fW,fH){
+    var r=waferD/2-edge;
+    if(r<=0||fW<=0||fH<=0) return {count:0,placements:[],r:Math.max(0,r)};
+    var best={count:-1,placements:[]};
+    var phases=[[0,0],[0.5,0],[0,0.5],[0.5,0.5]];
+    phases.forEach(function(ph){
+      var px=ph[0]*fW, py=ph[1]*fH;
+      var iMin=Math.floor((-r-px)/fW)-1, iMax=Math.ceil((r-px)/fW)+1;
+      var jMin=Math.floor((-r-py)/fH)-1, jMax=Math.ceil((r-py)/fH)+1;
+      var pl=[];
+      for(var i=iMin;i<=iMax;i++){
+        for(var j=jMin;j<=jMax;j++){
+          var x=px+i*fW, y=py+j*fH; // lower-left corner
+          var cx=Math.max(Math.abs(x),Math.abs(x+fW));
+          var cy=Math.max(Math.abs(y),Math.abs(y+fH));
+          if(cx*cx+cy*cy<=r*r+1e-9) pl.push({x:x,y:y});
+        }
+      }
+      if(pl.length>best.count){ best={count:pl.length,placements:pl}; }
+    });
+    best.r=r; return best;
+  }
+
+  // ---- main compute + render ----
+  function compute(){
+    var s=readState();
+    var pack=packReticle(s.projects,s.fieldW,s.fieldH,s.scribe);
+    var grid=fieldsPerWafer(s.waferD,s.edge,s.fieldW,s.fieldH);
+    var fields=grid.count;
+    var nodeF=NODE[s.node]||1, fieldArea=s.fieldW*s.fieldH;
+
+    var totalOccupied=0;
+    s.projects.forEach(function(p){ totalOccupied += p.w*p.h*p.copies; });
+
+    var rows=s.projects.map(function(p,i){
+      var area=p.w*p.h;                         // mm² per die
+      var blockArea=Math.max(MIN_BLOCK, area*p.copies); // billed mm²
+      var procF=PROC[p.proc]||1;
+      var Y=Math.min(1, Math.max(0, s.y0*yieldFrac(s.model, area/100, s.d0, s.alpha)));
+      var gross=p.copies*fields;
+      var good=gross*Y;
+      var goodPerWafer=good;
+      var wafersTarget = goodPerWafer>0 ? Math.ceil(s.target/goodPerWafer) : Infinity;
+      var costLo=BASE_LO*nodeF*procF*blockArea, costHi=BASE_HI*nodeF*procF*blockArea;
+      var cgLo = good>0? costLo/good : Infinity, cgHi = good>0? costHi/good : Infinity;
+      var share = totalOccupied>0 ? (area*p.copies)/totalOccupied : 0;
+      return {p:p,i:i,area:area,blockArea:blockArea,Y:Y,gross:gross,good:good,
+              wafersTarget:wafersTarget,costLo:costLo,costHi:costHi,cgLo:cgLo,cgHi:cgHi,share:share};
+    });
+
+    renderKPIs(s,pack,grid,rows);
+    renderReticle(s,pack);
+    renderWafer(s,grid);
+    renderTable(s,rows,totalOccupied,fieldArea,pack);
+    renderFitWarn(s,pack,grid,rows);
+    renderCostNote(s,rows);
+    updateRfqLink(s,rows);
+  }
+
+  function renderKPIs(s,pack,grid,rows){
+    var util=(s.fieldW*s.fieldH)>0 ? rows.reduce(function(a,r){return a+r.area*r.p.copies;},0)/(s.fieldW*s.fieldH)*100 : 0;
+    var totalGood=rows.reduce(function(a,r){return a+r.good;},0);
+    var runWafers=rows.reduce(function(m,r){return Math.max(m, isFinite(r.wafersTarget)?r.wafersTarget:0);},0);
+    var cards=[
+      {lab:'Reticle utilisation',val:fmt(util,0),unit:'%'},
+      {lab:'Fields / wafer',val:fmt(grid.count,0),unit:''},
+      {lab:'Good dies / wafer',val:fmt(totalGood,0),unit:'<small> all projects</small>'},
+      {lab:'Wafers for target',val:isFinite(runWafers)&&runWafers>0?fmt(runWafers,0):'–',unit:'<small> ≥ '+fmt(s.target)+'/proj</small>'}
+    ];
+    $('kpis').innerHTML = cards.map(function(c){
+      return '<div class="kpi"><div class="lab">'+c.lab+'</div><div class="val">'+c.val+(c.unit||'')+'</div></div>';
+    }).join('');
+  }
+
+  function renderReticle(s,pack){
+    var pad=2, W=s.fieldW, H=s.fieldH, scale=Math.min(420/W,420/H);
+    if(!isFinite(scale)||scale<=0) scale=10;
+    var vw=W*scale+pad*2, vh=H*scale+pad*2;
+    var svg=svgEl('svg',{viewBox:'0 0 '+vw+' '+vh,preserveAspectRatio:'xMidYMid meet'});
+    svg.appendChild(svgEl('rect',{x:pad,y:pad,width:W*scale,height:H*scale,fill:'none',stroke:'rgba(127,183,214,.5)','stroke-width':1.2,'stroke-dasharray':'4 3',rx:3}));
+    pack.placed.forEach(function(it){
+      var color=PALETTE[it.pi%PALETTE.length];
+      var r=svgEl('rect',{x:pad+it.x*scale,y:pad+it.y*scale,width:it.w*scale,height:it.h*scale,
+        fill: it.over?'rgba(224,107,107,.35)':color, 'fill-opacity':it.over?'1':'0.82',
+        stroke: it.over?'#e06b6b':'rgba(10,13,18,.6)','stroke-width':0.8,rx:1.5});
+      svg.appendChild(r);
+    });
+    var box=$('reticleSvg'); box.innerHTML=''; box.appendChild(svg);
+    $('reticleCap').textContent='field '+W+' × '+H+' mm · scribe '+s.scribe+' mm · heuristic shelf packing';
+    // legend
+    $('reticleLegend').innerHTML = s.projects.map(function(p,i){
+      return '<span><i style="background:'+PALETTE[i%PALETTE.length]+'"></i>'+esc(p.name)+'</span>';
+    }).join('') + (pack.fits?'':'<span><i style="background:rgba(224,107,107,.6)"></i>overflow — does not fit</span>');
+  }
+
+  function renderWafer(s,grid){
+    var R=s.waferD/2, pad=6, scale=300/s.waferD;
+    var vw=s.waferD*scale+pad*2, vh=vw, cx=pad+R*scale, cy=pad+R*scale;
+    var svg=svgEl('svg',{viewBox:'0 0 '+vw+' '+vh,preserveAspectRatio:'xMidYMid meet'});
+    // wafer
+    svg.appendChild(svgEl('circle',{cx:cx,cy:cy,r:R*scale,fill:'rgba(127,183,214,.05)',stroke:'rgba(236,231,221,.35)','stroke-width':1.2}));
+    // flat
+    svg.appendChild(svgEl('line',{x1:cx-R*scale*0.5,y1:cy+R*scale*0.92,x2:cx+R*scale*0.5,y2:cy+R*scale*0.92,stroke:'rgba(236,231,221,.35)','stroke-width':1.2}));
+    // edge exclusion
+    if(grid.r>0) svg.appendChild(svgEl('circle',{cx:cx,cy:cy,r:grid.r*scale,fill:'none',stroke:'var(--cool)','stroke-width':0.9,'stroke-dasharray':'4 3','stroke-opacity':0.7}));
+    // fields (svg y is down; flip)
+    grid.placements.forEach(function(f){
+      svg.appendChild(svgEl('rect',{x:cx+f.x*scale, y:cy-(f.y+s.fieldH)*scale, width:s.fieldW*scale, height:s.fieldH*scale,
+        fill:'rgba(255,106,31,.5)',stroke:'rgba(10,13,18,.55)','stroke-width':0.5}));
+    });
+    var box=$('waferSvg'); box.innerHTML=''; box.appendChild(svg);
+    $('waferCap').textContent=s.waferD+' mm wafer · '+grid.count+' full fields · usable ⌀ '+fmt(grid.r*2,0)+' mm';
+  }
+
+  function renderTable(s,rows,totalOccupied,fieldArea,pack){
+    var body=$('ptbody'); body.innerHTML='';
+    rows.forEach(function(r){
+      var tr=document.createElement('tr');
+      tr.innerHTML=
+        '<td class="name"><span class="dot" style="background:'+PALETTE[r.i%PALETTE.length]+'"></span>'+esc(r.p.name)+'</td>'+
+        '<td>'+r.p.w+'×'+r.p.h+'</td>'+
+        '<td>'+fmt(r.area,2)+'</td>'+
+        '<td>'+r.p.copies+'</td>'+
+        '<td>'+fmt(r.share*100,0)+'%</td>'+
+        '<td>'+fmt(r.gross)+'</td>'+
+        '<td>'+fmt(r.Y*100,1)+'%</td>'+
+        '<td>'+fmt(r.good)+'</td>'+
+        '<td>'+(isFinite(r.wafersTarget)?fmt(r.wafersTarget):'–')+'</td>'+
+        '<td>$'+fmt(r.costLo)+'–'+fmt(r.costHi)+'</td>'+
+        '<td>'+(isFinite(r.cgLo)?'$'+fmt(r.cgLo)+'–'+fmt(r.cgHi):'–')+'</td>';
+      body.appendChild(tr);
+    });
+    var tGross=rows.reduce(function(a,r){return a+r.gross;},0);
+    var tGood=rows.reduce(function(a,r){return a+r.good;},0);
+    var tLo=rows.reduce(function(a,r){return a+r.costLo;},0);
+    var tHi=rows.reduce(function(a,r){return a+r.costHi;},0);
+    var util=fieldArea>0?totalOccupied/fieldArea*100:0;
+    $('ptfoot').innerHTML='<tr><td class="name">Total · '+fmt(util,0)+'% reticle used</td><td></td><td>'+fmt(totalOccupied,1)+'</td><td></td><td>100%</td><td>'+fmt(tGross)+'</td><td></td><td>'+fmt(tGood)+'</td><td></td><td>$'+fmt(tLo)+'–'+fmt(tHi)+'</td><td></td></tr>';
+  }
+
+  function renderFitWarn(s,pack,grid,rows){
+    var msgs=[];
+    if(!pack.fits) msgs.push('Projects overflow the reticle field — reduce die sizes, copies, or enlarge the field.');
+    if(grid.count===0) msgs.push('No full reticle field fits inside the usable wafer radius — the field is larger than the wafer minus edge exclusion.');
+    var el=$('fitWarn');
+    if(msgs.length){ el.innerHTML='<div class="note warnbox"><b>Check setup:</b> '+msgs.map(esc).join(' ')+'</div>'; }
+    else el.innerHTML='';
+  }
+
+  function renderCostNote(s,rows){
+    var nodeLabel=$('node').options[$('node').selectedIndex].text;
+    $('costNote').innerHTML='<b>Cost is indicative only.</b> Calibrated to public university-shuttle reference pricing at the '+esc(nodeLabel)+' node ($'+fmt(BASE_LO*(NODE[s.node]||1))+'–'+fmt(BASE_HI*(NODE[s.node]||1))+'/mm² before process premium), floored at a '+MIN_BLOCK+' mm² minimum block. Real MPW pricing depends on the foundry, shuttle calendar, mask grade, wafer count and packaging — confirm in an RFQ. Yield is random-defect-limited ('+esc($('model').options[$('model').selectedIndex].text)+', D₀='+s.d0+'/cm², Y₀='+s.y0+'); it excludes parametric, test and assembly loss.';
+  }
+
+  function updateRfqLink(s,rows){
+    // pick the largest project as the representative deep-link
+    var rep=rows.slice().sort(function(a,b){return b.area-a.area;})[0];
+    var q={
+      process_node:(s.node==='350'?'0.35um':s.node==='180'?'180nm':s.node==='130'?'130nm':s.node==='90'?'90nm':s.node==='65'?'65nm':s.node==='40'?'40nm':'28nm'),
+      design_type: rep?rep.p.proc:'analog_mixed_signal',
+      die_area_mm2: rep?rep.area.toFixed(2):'',
+      sample_count: s.target,
+      project_count: s.projects.length,
+      utm_source:'mst_tools', utm_medium:'tool', utm_campaign:'mpw_planner'
+    };
+    var qs=Object.keys(q).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(q[k]);}).join('&');
+    $('rfqLink').href='https://store.mst-sg.com/services/mpw-tapeout-rfq?'+qs;
+  }
+
+  // ---- share link (state in querystring) ----
+  function encodeState(){
+    var s=readState();
+    var p=new URLSearchParams();
+    p.set('wd',s.waferD); p.set('e',s.edge); p.set('fw',s.fieldW); p.set('fh',s.fieldH);
+    p.set('sc',s.scribe); p.set('n',s.node); p.set('d0',s.d0); p.set('m',s.model);
+    p.set('al',s.alpha); p.set('y0',s.y0); p.set('t',s.target);
+    s.projects.forEach(function(pr){ p.append('p',[pr.name,pr.w,pr.h,pr.copies,pr.proc].join('~')); });
+    return location.origin+location.pathname+'?'+p.toString();
+  }
+  function decodeState(){
+    var p=new URLSearchParams(location.search);
+    if(![].concat.apply([],[p.get('wd'),p.get('fw')]).some(Boolean)) return false;
+    var set=function(id,v){ if(v!==null&&v!==undefined&&$(id)) $(id).value=v; };
+    set('waferD',p.get('wd')); set('edge',p.get('e')); set('fieldW',p.get('fw')); set('fieldH',p.get('fh'));
+    set('scribe',p.get('sc')); set('node',p.get('n')); set('d0',p.get('d0')); set('model',p.get('m'));
+    set('alpha',p.get('al')); set('y0',p.get('y0')); set('target',p.get('t'));
+    var prs=p.getAll('p');
+    if(prs.length){
+      var list=prs.map(function(str){
+        var a=str.split('~');
+        return {name:(a[0]||'Project').slice(0,40),w:Math.abs(parseFloat(a[1]))||1,h:Math.abs(parseFloat(a[2]))||1,
+                copies:Math.max(1,Math.round(parseFloat(a[3]))||1),proc:(PROC[a[4]]?a[4]:'analog_mixed_signal')};
+      });
+      renderProjectRows(list);
+    }
+    return true;
+  }
+
+  // ---- PNG export ----
+  function downloadPng(svgHostId,name){
+    var svg=$(svgHostId).querySelector('svg'); if(!svg) return;
+    var clone=svg.cloneNode(true);
+    // inline computed colors that use css vars
+    clone.querySelectorAll('[stroke="var(--cool)"]').forEach(function(n){n.setAttribute('stroke','#7FB7D6');});
+    var vb=svg.getAttribute('viewBox').split(/\s+/).map(Number);
+    var w=Math.round(vb[2]*3), h=Math.round(vb[3]*3);
+    clone.setAttribute('width',w); clone.setAttribute('height',h);
+    var data='<?xml version="1.0"?>'+new XMLSerializer().serializeToString(clone);
+    var img=new Image();
+    var url='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(data)));
+    img.onload=function(){
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      var ctx=c.getContext('2d'); ctx.fillStyle='#0a0d12'; ctx.fillRect(0,0,w,h); ctx.drawImage(img,0,0,w,h);
+      var a=document.createElement('a'); a.download=name+'.png'; a.href=c.toDataURL('image/png'); a.click();
+    };
+    img.src=url;
+  }
+
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},1800); }
+  function copy(text,msg){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){toast(msg);},function(){toast('Copy failed');}); }
+    else { var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast(msg);}catch(e){toast('Copy failed');} document.body.removeChild(ta); }
+  }
+
+  // ---- wiring ----
+  function init(){
+    if(!decodeState()) renderProjectRows(DEFAULT_PROJECTS.slice());
+    compute();
+
+    $('inputs').addEventListener('input', compute);
+    $('inputs').addEventListener('change', compute);
+
+    $('addProj').addEventListener('click', function(){
+      var s=readState();
+      if(s.projects.length>=8){ toast('Max 8 projects'); return; }
+      s.projects.push({name:'Project '+String.fromCharCode(65+s.projects.length),w:2,h:2,copies:2,proc:'analog_mixed_signal'});
+      renderProjectRows(s.projects); compute();
+    });
+    $('projs').addEventListener('click', function(e){
+      var rm=e.target.getAttribute('data-rm');
+      if(rm!==null){ var s=readState(); if(s.projects.length<=1){toast('Keep at least one project');return;} s.projects.splice(+rm,1); renderProjectRows(s.projects); compute(); }
+    });
+    $('shareBtn').addEventListener('click', function(){ copy(encodeState(),'Share link copied'); });
+    $('jsonBtn').addEventListener('click', function(){ copy(JSON.stringify(readState(),null,2),'JSON copied'); });
+    $('resetBtn').addEventListener('click', function(){ location.href=location.origin+location.pathname; });
+    document.querySelectorAll('[data-dl]').forEach(function(b){ b.addEventListener('click', function(){ downloadPng(b.getAttribute('data-dl'), b.getAttribute('data-name')); }); });
+  }
+
+  if(document.readyState!=='loading') init(); else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

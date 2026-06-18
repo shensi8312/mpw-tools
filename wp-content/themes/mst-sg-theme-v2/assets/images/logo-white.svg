@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0099CC;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <g>
+    <path d="M30 60 L30 130 L40 130 L40 80 L60 110 L80 80 L80 130 L90 130 L90 60 L75 60 L60 90 L45 60 Z"
+          fill="url(#blueGradient)" stroke="none"/>
+    <path d="M110 60 Q100 60 100 70 Q100 80 110 85 L130 85 Q135 85 135 90 Q135 95 130 95 L115 95 Q110 95 110 100 L110 105 Q110 110 120 110 L140 110 Q150 110 150 100 Q150 90 140 85 L120 85 Q115 85 115 80 Q115 75 120 75 L135 75 Q140 75 140 70 L140 65 Q140 60 130 60 Z"
+          fill="url(#blueGradient)" stroke="none"/>
+    <path d="M160 60 L160 70 L175 70 L175 130 L185 130 L185 70 L200 70 L200 60 Z"
+          fill="url(#blueGradient)" stroke="none"/>
+  </g>
+</svg>

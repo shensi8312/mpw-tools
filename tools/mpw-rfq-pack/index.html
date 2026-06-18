@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" class="js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MPW RFQ Pack Builder - non-confidential tapeout brief generator | MST</title>
+<meta name="description" content="Free browser tool to build a non-confidential MPW RFQ pack: node, process family, die area, package/test assumptions, timeline, end-use context and missing items. No GDS, no upload.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://mst-sg.com/tools/mpw-rfq-pack/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MPW RFQ Pack Builder - non-confidential tapeout brief generator">
+<meta property="og:description" content="Generate a high-level MPW RFQ brief before sharing confidential design data. Runs locally in your browser.">
+<meta property="og:url" content="https://mst-sg.com/tools/mpw-rfq-pack/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MPW RFQ Pack Builder",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web browser",
+  "url": "https://mst-sg.com/tools/mpw-rfq-pack/",
+  "description": "A free browser tool that helps teams prepare a non-confidential MPW RFQ brief before NDA and partner-confirmed review.",
+  "publisher": {"@type":"Organization","name":"Moore Solution Technology Pte. Ltd.","url":"https://mst-sg.com"},
+  "offers": {"@type":"Offer","price":"0","priceCurrency":"USD"}
+}
+</script>
+<style>
+:root{--ink:#0a0d12;--ink2:#0f141c;--panel:#121922;--panel2:#161e29;--line:rgba(236,231,221,.12);--line2:rgba(236,231,221,.22);--bone:#ece7dd;--dim:#9aa6b6;--faint:#5f6b7a;--signal:#ff6a1f;--soft:rgba(255,106,31,.13);--cool:#7fb7d6;--ok:#6fcf97;--warn:#f2c14e;--bad:#e06b6b;--mono:"IBM Plex Mono",monospace;--disp:"Bricolage Grotesque",sans-serif;--body:"Hanken Grotesk",sans-serif}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.26;-webkit-mask-image:radial-gradient(circle at 50% 0,#000,transparent 74%);mask-image:radial-gradient(circle at 50% 0,#000,transparent 74%)}a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1}.mono{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase}.eyebrow{color:var(--signal);display:inline-flex;gap:.7em;align-items:center}.eyebrow:before{content:"";width:24px;height:1px;background:var(--signal)}
+header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:rgba(10,13,18,.76);backdrop-filter:blur(12px)}header .wrap{height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:800;letter-spacing:-.01em}.mark{width:30px;height:30px;border:1.5px solid var(--signal);display:grid;place-items:center;font-family:var(--mono);font-size:.72rem;color:var(--signal)}.nav{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.nav a{color:var(--dim)}.nav a:hover{color:var(--signal)}
+.hero{padding:58px 0 28px}.hero-grid{display:grid;grid-template-columns:1fr .85fr;gap:34px;align-items:end}h1{font-family:var(--disp);font-size:clamp(2rem,5vw,3.35rem);line-height:1.04;letter-spacing:-.025em;margin:16px 0 0;max-width:15ch}h1 span{color:var(--signal)}.lede{color:var(--dim);font-size:1.05rem;max-width:62ch;margin:18px 0 0}.privacy{border:1px solid rgba(111,207,151,.35);background:rgba(111,207,151,.1);color:var(--ok);padding:13px 16px;font-family:var(--mono);font-size:.75rem;letter-spacing:.04em}.privacy b{color:var(--bone)}
+.app{display:grid;grid-template-columns:430px minmax(0,1fr);gap:22px;padding:18px 0 68px;align-items:start}.panel{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--ink2));padding:20px}.panel.sticky{position:sticky;top:84px}.panel h2{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--signal);margin:0 0 14px}.panel h3{font-family:var(--disp);font-size:1.05rem;margin:0 0 10px}.section-note{color:var(--dim);font-size:.92rem;margin:-4px 0 16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{margin-bottom:13px}label{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}input,select,textarea{width:100%;background:var(--ink);color:var(--bone);border:1px solid var(--line2);padding:10px 12px;font-family:var(--body);font-size:.96rem;border-radius:0}textarea{min-height:92px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--signal);box-shadow:0 0 0 3px var(--soft)}.hint{font-family:var(--mono);font-size:.64rem;color:var(--faint);margin-top:5px}.checks{display:grid;gap:8px}.check{display:flex;gap:10px;align-items:flex-start;color:var(--dim);font-size:.93rem}.check input{width:16px;height:16px;margin-top:4px;accent-color:var(--signal);flex:none}.check b{color:var(--bone);font-weight:600}
+.score{display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:stretch;margin-bottom:18px}.gauge{border:1px solid var(--line);background:var(--ink2);display:grid;place-items:center;min-height:150px}.gauge .n{font-family:var(--disp);font-size:3.1rem;line-height:1;font-weight:800;color:var(--signal)}.gauge .t{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:6px}.status{border:1px solid var(--line);background:var(--panel);padding:18px}.status b{display:block;font-family:var(--disp);font-size:1.25rem;line-height:1.12;margin-bottom:8px}.status p{margin:0;color:var(--dim);font-size:.94rem}.list{margin:16px 0 0;padding:0;list-style:none}.list li{padding:9px 0;border-top:1px solid var(--line);color:var(--dim)}.list li:before{content:"- ";color:var(--signal)}.output{background:var(--ink);border:1px solid var(--line);padding:16px;white-space:pre-wrap;min-height:340px;max-height:560px;overflow:auto;font-family:var(--mono);font-size:.78rem;line-height:1.58;color:var(--bone)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}.btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--signal);background:var(--signal);color:#160a03;padding:11px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:.5em}.btn:hover{background:transparent;color:var(--signal)}.btn.ghost{background:transparent;color:var(--bone);border-color:var(--line2)}.btn.ghost:hover{border-color:var(--signal);color:var(--signal)}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--bone);color:var(--ink);font-family:var(--mono);font-size:.78rem;padding:10px 16px;transition:.22s;z-index:50}.toast.show{transform:translateX(-50%) translateY(0)}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--faint);font-family:var(--mono);font-size:.68rem;letter-spacing:.07em}.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}@media(max-width:960px){.hero-grid,.app{grid-template-columns:1fr}.panel.sticky{position:static}.score{grid-template-columns:1fr}.nav{display:none}}@media(max-width:620px){.grid2{grid-template-columns:1fr}header .wrap{height:auto;min-height:64px;padding-top:12px;padding-bottom:12px}}
+</style>
+<link rel="stylesheet" href="/tools/assets/mst-site-header.css">
+</head>
+<body>
+<header id="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="MST Home">
+      <img
+        src="/wp-content/themes/mst-sg-theme-v2/assets/images/logo-header.png"
+        alt="Moore Solution Technology"
+        class="brand-logo"
+        width="44"
+        height="44"
+        loading="eager"
+        decoding="async"
+      >
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="https://store.mst-sg.com/?utm_source=mst-sg&amp;utm_medium=tools&amp;utm_campaign=store_entrance&amp;utm_content=nav_store_rfq" target="_blank" rel="noopener">Store / RFQ</a>
+      <a href="/mpw/">MPW</a>
+      <a href="/pid-to-native-solidworks-assembly/">P&amp;ID to SolidWorks</a>
+      <a href="/tools/">Tools</a>
+      <a href="/solutions/">Design Automation</a>
+      <a href="/news/">News</a>
+    </nav>
+    <div class="lang-switch" aria-label="Language">
+      <a href="/tools/mpw-rfq-pack/?lang=en" lang="en" hreflang="en" class="is-active">EN</a>
+      <span aria-hidden="true">/</span>
+      <a href="/tools/mpw-rfq-pack/?lang=zh" lang="zh" hreflang="zh">中文</a>
+    </div>
+    <div class="nav-actions-redesign">
+      <a class="nav-mail" href="https://qiye.aliyun.com" target="_blank" rel="noopener">Mail</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="mono eyebrow">Free MPW tool</div>
+        <h1>Build a clean <span>MPW RFQ pack</span> before NDA.</h1>
+        <p class="lede">Turn early tapeout requirements into a structured, non-confidential brief: node, process family, die area, package/test assumptions, timeline, country/end-use context and open questions. The output is for first-screening only, not a quote.</p>
+      </div>
+      <div class="privacy"><b>No GDS, no upload.</b> This page stores nothing and sends nothing. Do not paste layout, netlist, RTL, schematics, masks, customer secrets or proprietary design IP into a public browser tool.</div>
+    </div>
+  </section>
+
+  <section class="wrap app">
+    <form class="panel sticky" id="rfqForm">
+      <h2>Inputs</h2>
+      <p class="section-note">Use high-level values. Approximate ranges are better than exposing confidential design details.</p>
+
+      <div class="field"><label for="project">Project label</label><input id="project" value="Prototype MPW project" autocomplete="off"></div>
+      <div class="grid2">
+        <div class="field"><label for="persona">Requester type</label><select id="persona"><option>Fabless startup</option><option>University / research group</option><option>Industrial chip team</option><option>Equipment / sensor company</option><option>Procurement team</option></select></div>
+        <div class="field"><label for="country">Company country</label><input id="country" placeholder="Singapore, India, UAE, ..." autocomplete="off"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="node">Target node</label><select id="node"><option value="">Select node</option><option>0.35um / 350nm</option><option>0.18um / 180nm</option><option>130nm</option><option>90nm</option><option>65/55nm</option><option>40nm</option><option>28/22nm case-by-case</option><option>Not sure yet</option></select></div>
+        <div class="field"><label for="process">Process family</label><select id="process"><option value="">Select process</option><option>Analog / mixed-signal CMOS</option><option>BCD / power management</option><option>High-voltage</option><option>RF / RFIC</option><option>eNVM / eFlash</option><option>MEMS / sensor</option><option>Logic CMOS</option><option>Not sure yet</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="die">Die area estimate</label><input id="die" placeholder="e.g. 4 mm2 or 2 x 2 mm"></div>
+        <div class="field"><label for="samples">Sample quantity</label><input id="samples" placeholder="e.g. 25 packaged parts"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="packageNeed">Package assumption</label><select id="packageNeed"><option value="">Select package status</option><option>Need packaging recommendation</option><option>QFN / LQFP likely</option><option>BGA / WLCSP likely</option><option>COB / bare die acceptable</option><option>Customer-specified package</option><option>Not decided</option></select></div>
+        <div class="field"><label for="testNeed">Probe / test scope</label><select id="testNeed"><option value="">Select test status</option><option>Wafer probe needed</option><option>Packaged test needed</option><option>Basic continuity only</option><option>Customer handles test</option><option>Not decided</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="timeline">Target timeline</label><input id="timeline" placeholder="e.g. shuttle in Q4 2026"></div>
+        <div class="field"><label for="endUse">End-use category</label><input id="endUse" placeholder="IoT, sensor, power, RF, research..."></div>
+      </div>
+      <div class="field"><label for="stage">Design stage</label><select id="stage"><option>Concept / architecture</option><option>Schematic in progress</option><option>Layout in progress</option><option>DRC/LVS cleanup</option><option>Ready for partner review after NDA</option></select></div>
+      <div class="field"><label for="notes">Non-confidential notes</label><textarea id="notes" placeholder="Keep this high level: voltage class, package constraints, expected test needs, rough die size, schedule constraints."></textarea><div class="hint">Do not paste layout geometry, proprietary circuit detail, RTL, schematics or GDS metadata that you consider confidential.</div></div>
+
+      <h2>Readiness checks</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="nda"><span><b>NDA path expected.</b> Design details will wait until NDA and partner confirmation.</span></label>
+        <label class="check"><input type="checkbox" id="pdk"><span><b>PDK path understood.</b> The team knows PDK/rule-deck access is process-specific.</span></label>
+        <label class="check"><input type="checkbox" id="drc"><span><b>Signoff plan exists.</b> DRC/LVS or cleanup responsibility is identified.</span></label>
+        <label class="check"><input type="checkbox" id="compliance"><span><b>Country/end-use can be screened.</b> Basic export/compliance context is available.</span></label>
+      </div>
+    </form>
+
+    <div>
+      <div class="score">
+        <div class="gauge"><div><div class="n" id="score">0</div><div class="t">readiness score</div></div></div>
+        <div class="status"><b id="statusTitle">Needs more detail</b><p id="statusText">Fill the fields to generate a useful first RFQ package.</p><ul class="list" id="missing"></ul></div>
+      </div>
+      <div class="panel">
+        <h2>Generated pack</h2>
+        <pre class="output" id="output"></pre>
+        <div class="actions">
+          <button class="btn" type="button" id="copyBtn">Copy brief</button>
+          <button class="btn ghost" type="button" id="mdBtn">Download Markdown</button>
+          <button class="btn ghost" type="button" id="jsonBtn">Download JSON</button>
+          <a class="btn ghost" href="https://store.mst-sg.com/services/mpw-tapeout-rfq?utm_source=mst-sg&amp;utm_medium=tool&amp;utm_campaign=mpw_rfq_pack" target="_blank" rel="noopener">Submit RFQ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap foot"><span>© 2023-2026 Moore Solution Technology Pte. Ltd. Singapore</span><span><a href="/tools/">Tools</a> · <a href="/mpw/">MPW</a> · <a href="mailto:sales@mst-sg.com">sales@mst-sg.com</a></span></div></footer>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+var ids = ['project','persona','country','node','process','die','samples','packageNeed','testNeed','timeline','endUse','stage','notes'];
+var checks = ['nda','pdk','drc','compliance'];
+var required = [
+  ['country','Company country'],
+  ['node','Target node'],
+  ['process','Process family'],
+  ['die','Die area estimate'],
+  ['samples','Sample quantity'],
+  ['packageNeed','Package assumption'],
+  ['testNeed','Probe / test scope'],
+  ['timeline','Target timeline'],
+  ['endUse','End-use category']
+];
+function val(id){return (document.getElementById(id).value || '').trim();}
+function checked(id){return document.getElementById(id).checked;}
+function data(){
+  var obj = {};
+  ids.forEach(function(id){obj[id]=val(id);});
+  obj.readiness = {};
+  checks.forEach(function(id){obj.readiness[id]=checked(id);});
+  return obj;
+}
+function missingItems(d){
+  var m = [];
+  required.forEach(function(pair){ if(!d[pair[0]]) m.push(pair[1]); });
+  if(!d.readiness.nda) m.push('NDA / partner-confirmed design-detail path');
+  if(!d.readiness.pdk) m.push('PDK / rule-deck access expectation');
+  if(!d.readiness.drc) m.push('DRC/LVS responsibility or cleanup plan');
+  if(!d.readiness.compliance) m.push('Country / end-use context for screening');
+  return m;
+}
+function readinessScore(d){
+  var total = required.length + checks.length;
+  var done = required.filter(function(pair){return !!d[pair[0]];}).length + checks.filter(function(id){return d.readiness[id];}).length;
+  return Math.round(done / total * 100);
+}
+function md(d, score, missing){
+  return [
+    '# Non-confidential MPW RFQ Pack',
+    '',
+    'Generated locally in the MST MPW RFQ Pack Builder.',
+    '',
+    'Important boundary: do not send GDS, netlists, RTL, schematics, mask data or confidential design IP at first intake. Design detail should wait until NDA and partner-confirmed review.',
+    '',
+    '## Project snapshot',
+    '- Project label: ' + (d.project || 'TBD'),
+    '- Requester type: ' + (d.persona || 'TBD'),
+    '- Company country: ' + (d.country || 'TBD'),
+    '- End-use category: ' + (d.endUse || 'TBD'),
+    '- Design stage: ' + (d.stage || 'TBD'),
+    '',
+    '## MPW requirements',
+    '- Target node: ' + (d.node || 'TBD'),
+    '- Process family: ' + (d.process || 'TBD'),
+    '- Die area estimate: ' + (d.die || 'TBD'),
+    '- Prototype/sample quantity: ' + (d.samples || 'TBD'),
+    '- Package assumption: ' + (d.packageNeed || 'TBD'),
+    '- Probe / test scope: ' + (d.testNeed || 'TBD'),
+    '- Target timeline: ' + (d.timeline || 'TBD'),
+    '',
+    '## Readiness',
+    '- NDA path expected before design-detail exchange: ' + (d.readiness.nda ? 'yes' : 'TBD'),
+    '- PDK / rule-deck access expectation understood: ' + (d.readiness.pdk ? 'yes' : 'TBD'),
+    '- DRC/LVS or cleanup responsibility identified: ' + (d.readiness.drc ? 'yes' : 'TBD'),
+    '- Country/end-use context available for screening: ' + (d.readiness.compliance ? 'yes' : 'TBD'),
+    '- Readiness score: ' + score + '/100',
+    '',
+    '## Missing or open items',
+    missing.length ? missing.map(function(x){return '- ' + x;}).join('\n') : '- No major first-pass fields missing.',
+    '',
+    '## Non-confidential notes',
+    d.notes || 'TBD',
+    '',
+    '## Suggested next questions for partner-confirmed review',
+    '- Is the requested node/process family available for the target timeline?',
+    '- What PDK, NDA and compliance path applies before design detail is exchanged?',
+    '- What packaging, wafer probe and packaged-test options fit the prototype objective?',
+    '- What is the submission-freeze date and what handoff artifacts are required?',
+    '',
+    'This pack is for first-screening and RFQ preparation only. It is not a quote and does not confirm wafer capacity, pricing, PDK access or schedule.'
+  ].join('\n');
+}
+function render(){
+  var d = data();
+  var miss = missingItems(d);
+  var score = readinessScore(d);
+  document.getElementById('score').textContent = score;
+  var title = score >= 85 ? 'Ready for high-level RFQ' : score >= 60 ? 'Usable first brief' : 'Needs more detail';
+  var text = score >= 85 ? 'This is enough for a clean non-confidential first screening. Real price, schedule, PDK access and packaging/test path remain partner-confirmed.' : score >= 60 ? 'This can start a conversation, but the missing items will slow process-fit screening.' : 'Add the missing fields before sending this to a coordination team.';
+  document.getElementById('statusTitle').textContent = title;
+  document.getElementById('statusText').textContent = text;
+  document.getElementById('missing').innerHTML = (miss.length ? miss : ['No major first-pass fields missing.']).map(function(x){return '<li>'+escapeHtml(x)+'</li>';}).join('');
+  document.getElementById('output').textContent = md(d, score, miss);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function download(name, type, text){
+  var blob = new Blob([text], {type:type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(a.href);
+  a.remove();
+}
+function showToast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},1600);}
+ids.concat(checks).forEach(function(id){document.getElementById(id).addEventListener('input',render);document.getElementById(id).addEventListener('change',render);});
+document.getElementById('copyBtn').onclick=function(){navigator.clipboard.writeText(document.getElementById('output').textContent).then(function(){showToast('Brief copied');});};
+document.getElementById('mdBtn').onclick=function(){download('mpw-rfq-pack.md','text/markdown;charset=utf-8',document.getElementById('output').textContent);};
+document.getElementById('jsonBtn').onclick=function(){download('mpw-rfq-pack.json','application/json;charset=utf-8',JSON.stringify(data(),null,2));};
+render();
+</script>
+</body>
+</html>
