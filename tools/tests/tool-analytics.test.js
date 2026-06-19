@@ -43,6 +43,10 @@ test('tool analytics classifies conversion and discovery links', () => {
     'tool_rfq_click',
   );
   assert.equal(
+    classifyInteraction({ tagName: 'A', href: 'mailto:sales@mst-sg.com?subject=MST%20tool%20brief' }).eventName,
+    'tool_email_click',
+  );
+  assert.equal(
     classifyInteraction({ tagName: 'A', href: 'https://github.com/shensi8312/mpw-tools' }).eventName,
     'tool_github_click',
   );

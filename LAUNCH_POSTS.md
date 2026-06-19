@@ -64,6 +64,8 @@ MST Open Tools now has English and Chinese UI support across the static tool dir
 
 The tools are still browser-first and open-source: MPW RFQ preparation, tapeout readiness checking, shuttle schedule filtering, local-only GDSII metadata inspection, P&ID/SOLIDWORKS intake, UHP gas-stick review and BOM RFQ cleanup.
 
+We also added an opt-in "Email MST" path that drafts a bounded, non-confidential tool brief to sales@mst-sg.com. It does not auto-send data, and the prompt reminds users not to send GDS, RTL, netlists, schematics, masks or confidential customer files.
+
 Live:
 https://mst-sg.com/tools/
 

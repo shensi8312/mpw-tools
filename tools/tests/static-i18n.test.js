@@ -61,6 +61,7 @@ test('common text dictionary covers shared tool chrome and action labels', () =>
   assert.equal(i18n.t('Pilot brief', 'zh'), '试点简报');
   assert.equal(i18n.t('Engineer questions', 'zh'), '工程问题');
   assert.equal(i18n.t('Submit RFQ', 'zh'), '提交询价');
+  assert.equal(i18n.t('Email MST', 'zh'), '邮件联系 MST');
   assert.equal(
     i18n.t('MST Open Tools - free MPW, P&ID and engineering RFQ utilities', 'zh'),
     'MST 开放工具 - 免费 MPW、P&ID 与工程 RFQ 工具',

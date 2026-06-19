@@ -68,6 +68,9 @@
     }
 
     if (tagName === 'A' && href) {
+      if (/^mailto:sales@mst-sg\.com/i.test(href)) {
+        return { eventName: 'tool_email_click', category: 'conversion', label: 'sales@mst-sg.com', href: 'mailto:sales@mst-sg.com', id: id };
+      }
       if (/^https:\/\/store\.mst-sg\.com\//i.test(href) || /^https:\/\/store\.mst-sg\.com$/i.test(href)) {
         return { eventName: 'tool_rfq_click', category: 'conversion', label: href, href: href, id: id };
       }

@@ -4,6 +4,8 @@ Free browser tools for mature-node MPW planning, non-confidential RFQ preparatio
 
 The live tools include English and Chinese UI support. Use `?lang=zh`, `?lang=en`, or the browser language preference.
 
+Each tool can draft a bounded, non-confidential `mailto:` brief to `sales@mst-sg.com` so a buyer can contact MST after using a tool. This is opt-in: the tools do not automatically send user inputs or generated output.
+
 Built by [MST](https://mst-sg.com). MST is not a wafer foundry and does not manufacture wafers directly. These tools help engineers prepare safer first conversations before NDA, partner confirmation, and any design-detail exchange.
 
 ## Use Them Live
@@ -38,6 +40,8 @@ https://store.mst-sg.com/services/mpw-tapeout-rfq
 - `tools/`: live static tool pages, shared CSS/JS assets, and browser-safe core logic.
 - `tools/assets/open-tools-core.js`: reusable pure functions for schedule filtering, manifest building, PDK checklists, tag parsing, package suggestions, timeline planning, BOM checks, UHP checklisting, and RFQ CSV normalization.
 - `tools/assets/mst-static-i18n.js`: browser-side English/Chinese UI translations for the static tools.
+- `tools/assets/mst-tool-contact.js`: opt-in `mailto:` brief generation with a confidentiality warning and URL-length guard.
+- `tools/assets/mst-tool-schema.js`: client-side `SoftwareApplication` structured data for the live static tools.
 - `tools/tests/`: Node test coverage for the shared tool logic.
 - `access-map.csv`: open MPW route comparison data used by MST's public access map.
 - root tool folders: earlier standalone copies kept for compatibility with existing links and forks.

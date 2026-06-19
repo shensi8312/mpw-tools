@@ -128,6 +128,8 @@ html:not(.js) .dropzone{display:none}
 <link rel="stylesheet" href="/tools/assets/mst-site-header.css">
 <link rel="stylesheet" href="/tools/assets/mst-light-industrial.css">
 <script src="/tools/assets/mst-static-i18n.js"></script>
+<script src="/tools/assets/mst-tool-schema.js"></script>
+<script src="/tools/assets/mst-tool-contact.js"></script>
 </head>
 <body>
 
@@ -223,6 +225,7 @@ html:not(.js) .dropzone{display:none}
         <a class="btn go" id="rfqLink" href="https://store.mst-sg.com/services/mpw-tapeout-rfq">Start MPW RFQ with this die size →</a>
         <button type="button" class="btn" id="copyRfq">Copy summary</button>
         <button type="button" class="btn" id="dlRfq">Download .txt</button>
+        <a class="btn" id="emailBtn" href="mailto:sales@mst-sg.com" data-tool-contact="1" data-output="#rfqText">Email MST</a>
         <button type="button" class="btn" id="again">Inspect another file</button>
       </div>
     </div>
@@ -657,6 +660,7 @@ function parseGds(buf){
     q.push('notes='+encodeURIComponent(text));
     q.push('utm_source=mst_tools'); q.push('utm_medium=tool'); q.push('utm_campaign=mpw_gds');
     $('rfqLink').href = STORE + '?' + q.join('&');
+    if(window.MSTToolContact) window.MSTToolContact.refresh(document);
   }
 
   // ---- wiring ----

@@ -80,6 +80,7 @@
       'Download CSV': '下载 CSV',
       'Download JSON': '下载 JSON',
       'Submit RFQ': '提交询价',
+      'Email MST': '邮件联系 MST',
       'Capability page': '能力页面',
       'Generated output tabs': '生成结果标签',
       'Tools': '工具',

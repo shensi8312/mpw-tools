@@ -1,6 +1,7 @@
 (function () {
   var Core = window.MSTOpenToolsCore;
   var I18n = window.MSTStaticI18n;
+  var Contact = window.MSTToolContact;
   var lang = I18n ? I18n.currentLang() : 'en';
   function tr(value) { return I18n ? I18n.t(value, lang) : value; }
   var config = JSON.parse(document.getElementById('tool-config').textContent);
@@ -156,6 +157,7 @@
     document.getElementById('output').textContent = result.markdown;
     document.getElementById('csvBtn').style.display = result.csv ? '' : 'none';
     document.getElementById('csvBtn').onclick = function () { download(config.slug + '.csv', 'text/csv;charset=utf-8', result.csv); };
+    if (Contact) Contact.refresh(document);
   }
 
   function escapeHtml(value) {
@@ -185,7 +187,8 @@
         h('button', { class: 'btn', type: 'button', id: 'copyBtn', text: tr('Copy output') }),
         h('button', { class: 'btn ghost', type: 'button', id: 'mdBtn', text: tr('Download Markdown') }),
         h('button', { class: 'btn ghost', type: 'button', id: 'csvBtn', text: tr('Download CSV') }),
-        h('a', { class: 'btn ghost', href: 'https://store.mst-sg.com/services/mpw-tapeout-rfq?utm_source=mst-sg&utm_medium=tool&utm_campaign=' + config.slug, target: '_blank', rel: 'noopener', text: tr('Submit RFQ') })
+        h('a', { class: 'btn ghost', href: 'https://store.mst-sg.com/services/mpw-tapeout-rfq?utm_source=mst-sg&utm_medium=tool&utm_campaign=' + config.slug, target: '_blank', rel: 'noopener', text: tr('Submit RFQ') }),
+        h('a', { class: 'btn ghost', id: 'emailBtn', href: 'mailto:sales@mst-sg.com', 'data-tool-contact': '1', 'data-output': '#output', 'data-title': config.title, text: tr('Email MST') })
       ])])
     ]);
     app.appendChild(h('section', { class: 'wrap app' }, [form, results]));
